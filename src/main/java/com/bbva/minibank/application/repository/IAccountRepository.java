@@ -1,5 +1,5 @@
 package com.bbva.minibank.application.repository;
 
-public interface ICountRepository {
+public interface IAccountRepository {
 
 }
