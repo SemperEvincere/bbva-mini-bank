@@ -13,10 +13,10 @@ import jakarta.persistence.Table;
 import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "clients")
@@ -26,7 +26,9 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ClientEntity {
 
-  @GeneratedValue(generator = "UUID")
+//  @GeneratedValue(generator = "UUID")
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid2")
   @Id
   private UUID id;
   @Nonnull

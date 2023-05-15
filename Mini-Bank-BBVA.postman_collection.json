@@ -1,0 +1,44 @@
+{
+	"info": {
+		"_postman_id": "e980bca3-8e07-47fd-b1a9-900f6a0c2225",
+		"name": "Mini-Bank-BBVA",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18095139"
+	},
+	"item": [
+		{
+			"name": "Client",
+			"item": [
+				{
+					"name": "create Client",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"lastName\" : \"semper\",\r\n    \"firstName\" : \"evincere\",\r\n    \"email\" : \"elsemper@gmail.com\",\r\n    \"phone\" : \"542262626262\",\r\n    \"address\" : \"address\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8888/client/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"client",
+								"create"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

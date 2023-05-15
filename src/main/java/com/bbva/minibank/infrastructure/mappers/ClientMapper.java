@@ -35,6 +35,7 @@ public class ClientMapper {
 
   public Client entityToClient(ClientEntity clientEntity) {
     Client client = new Client();
+    client.setId(clientEntity.getId());
     client.setFirstName(clientEntity.getFirstName());
     client.setLastName(clientEntity.getLastName());
     client.setEmail(clientEntity.getEmail());

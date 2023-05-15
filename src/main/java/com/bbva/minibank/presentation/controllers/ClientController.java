@@ -23,6 +23,6 @@ public class ClientController {
   public ResponseEntity<?> create(@RequestBody ClientCreateRequest request) {
     Client client = clientCreateUseCase.create(request);
     Client response = clientSaveUseCase.save(client);
-    return new ResponseEntity<>(client, null, 201);
+    return new ResponseEntity<>(response, null, 201);
   }
 }
