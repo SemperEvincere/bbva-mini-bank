@@ -16,8 +16,9 @@ public class ClientRepositoryImpl implements IClientRepository  {
   private final IClientSpringRepository clientSpringRepository;
   private final ClientMapper clientMapper;
   @Override
-  public void saveClient(Client client) {
+  public Client saveClient(Client client) {
     ClientEntity clientEntity = clientMapper.toEntity(client);
     clientSpringRepository.save(clientEntity);
+    return clientMapper.entityToClient(clientEntity);
   }
 }

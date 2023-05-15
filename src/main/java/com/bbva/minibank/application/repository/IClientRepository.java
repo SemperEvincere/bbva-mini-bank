@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 
 public interface IClientRepository {
 
-  void saveClient(Client client);
-
+  Client saveClient(Client client);
 
 }
