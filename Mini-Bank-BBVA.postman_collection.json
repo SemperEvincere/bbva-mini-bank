@@ -37,6 +37,26 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "http://localhost:8888/client/getAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8888/client/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"client",
+								""
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}

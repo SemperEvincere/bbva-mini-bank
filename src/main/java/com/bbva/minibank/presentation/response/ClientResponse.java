@@ -1,19 +1,17 @@
-package com.bbva.minibank.domain.models;
+package com.bbva.minibank.presentation.response;
 
+import com.bbva.minibank.domain.models.Account;
+import com.bbva.minibank.domain.models.Client;
 import java.util.List;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Builder
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-public class Client {
+public class ClientResponse {
 
   private UUID id;
   private String lastName;
@@ -21,7 +19,4 @@ public class Client {
   private String email;
   private String phone;
   private String address;
-  private List<Account> accounts;
-  private Client coHolder;
-
 }

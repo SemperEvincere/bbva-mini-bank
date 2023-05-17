@@ -3,6 +3,7 @@ package com.bbva.minibank.infrastructure.mappers;
 import com.bbva.minibank.domain.models.Client;
 import com.bbva.minibank.infrastructure.entities.ClientEntity;
 import com.bbva.minibank.presentation.request.ClientCreateRequest;
+import com.bbva.minibank.presentation.response.ClientResponse;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -42,5 +43,16 @@ public class ClientMapper {
     client.setPhone(clientEntity.getPhone());
     client.setAddress(clientEntity.getAddress());
     return client;
+  }
+
+  public ClientResponse toResponse(Client client) {
+    return ClientResponse.builder()
+        .id(client.getId())
+        .firstName(client.getFirstName())
+        .lastName(client.getLastName())
+        .email(client.getEmail())
+        .phone(client.getPhone())
+        .address(client.getAddress())
+        .build();
   }
 }
