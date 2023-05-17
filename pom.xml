@@ -24,6 +24,13 @@
 			<version>6.2.2.Final</version>
 			<type>pom</type>
 		</dependency>
+		<!-- Hibernate validator -->
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>8.0.0.Final</version>
+		</dependency>
+
 		<!--spring data jpa -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
