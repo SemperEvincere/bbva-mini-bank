@@ -1,4 +1,4 @@
-package com.bbva.minibank.presentation.response;
+package com.bbva.minibank.presentation.response.client;
 
 import com.bbva.minibank.domain.models.Account;
 import com.bbva.minibank.domain.models.Client;

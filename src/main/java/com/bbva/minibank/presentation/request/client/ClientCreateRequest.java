@@ -1,4 +1,4 @@
-package com.bbva.minibank.presentation.request;
+package com.bbva.minibank.presentation.request.client;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

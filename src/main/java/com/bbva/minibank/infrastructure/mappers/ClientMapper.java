@@ -2,8 +2,8 @@ package com.bbva.minibank.infrastructure.mappers;
 
 import com.bbva.minibank.domain.models.Client;
 import com.bbva.minibank.infrastructure.entities.ClientEntity;
-import com.bbva.minibank.presentation.request.ClientCreateRequest;
-import com.bbva.minibank.presentation.response.ClientResponse;
+import com.bbva.minibank.presentation.request.client.ClientCreateRequest;
+import com.bbva.minibank.presentation.response.client.ClientResponse;
 import org.springframework.stereotype.Component;
 
 @Component

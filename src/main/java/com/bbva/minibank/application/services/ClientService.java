@@ -6,7 +6,7 @@ import com.bbva.minibank.application.usecases.client.IClientFindByUseCase;
 import com.bbva.minibank.application.usecases.client.IClientSaveUseCase;
 import com.bbva.minibank.domain.models.Client;
 import com.bbva.minibank.infrastructure.mappers.ClientMapper;
-import com.bbva.minibank.presentation.request.ClientCreateRequest;
+import com.bbva.minibank.presentation.request.client.ClientCreateRequest;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
