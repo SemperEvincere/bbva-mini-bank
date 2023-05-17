@@ -12,11 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-@AllArgsConstructor
 public class ClientRepositoryImpl implements IClientRepository  {
 
-  private final IClientSpringRepository clientSpringRepository;
-  private final ClientMapper clientMapper;
+  @Autowired
+  private IClientSpringRepository clientSpringRepository;
+  @Autowired
+  private ClientMapper clientMapper;
   @Override
   public Client saveClient(Client client) {
     ClientEntity clientEntity = clientMapper.toEntity(client);

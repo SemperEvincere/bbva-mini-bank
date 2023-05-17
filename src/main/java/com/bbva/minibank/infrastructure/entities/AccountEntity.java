@@ -13,9 +13,13 @@ import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "accounts")
+@Getter
+@Setter
 public class AccountEntity {
 
   @Id

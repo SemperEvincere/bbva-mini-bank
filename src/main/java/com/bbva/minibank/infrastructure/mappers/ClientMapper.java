@@ -1,13 +1,19 @@
 package com.bbva.minibank.infrastructure.mappers;
 
 import com.bbva.minibank.domain.models.Client;
+import com.bbva.minibank.infrastructure.entities.AccountEntity;
 import com.bbva.minibank.infrastructure.entities.ClientEntity;
 import com.bbva.minibank.presentation.request.client.ClientCreateRequest;
 import com.bbva.minibank.presentation.response.client.ClientResponse;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component()
 public class ClientMapper {
+
+  @Autowired
+  private AccountMapper accountMapper;
 
   public ClientEntity toEntity(Client client) {
     ClientEntity clientEntity = new ClientEntity();
@@ -16,10 +22,10 @@ public class ClientMapper {
     clientEntity.setEmail(client.getEmail());
     clientEntity.setPhone(client.getPhone());
     clientEntity.setAddress(client.getAddress());
-    // todo: map accounts  List<AccountEntity> accountEntities = mapAccounts(client.getAccounts());
+    List<AccountEntity> accountEntities = client.getAccounts().stream().map(accountMapper::mapToEntity).toList();
+    clientEntity.setAccounts(accountEntities);
     if (client.getCoHolder() != null) {
-      ClientEntity coHolderEntity = toEntity(client.getCoHolder());
-      clientEntity.setCoHolder(coHolderEntity);
+      clientEntity.setCoHolder(toEntity(client.getCoHolder()));
     }
     return clientEntity;
   }

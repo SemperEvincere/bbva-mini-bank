@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -29,7 +30,8 @@ public class ClientController {
   private final IClientCreateUseCase clientCreateUseCase;
   private final IClientSaveUseCase clientSaveUseCase;
   private final IClientFindByUseCase clientFindByUseCase;
-  private final ClientMapper clientMapper;
+  @Autowired
+  private ClientMapper clientMapper;
 
   @PostMapping(value = "/create", consumes = "application/json", produces = "application/json")
   public ResponseEntity<?> create(@Valid @RequestBody ClientCreateRequest request, BindingResult bindingResult) {
@@ -49,7 +51,7 @@ public class ClientController {
   }
 
   @GetMapping(value = "/", produces = "application/json")
-  public ResponseEntity<?> getAll() {
+  public ResponseEntity<List<ClientResponse>> getAll() {
     List<ClientResponse> response = clientFindByUseCase
         .getAll()
         .stream()

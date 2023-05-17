@@ -1,9 +1,11 @@
 package com.bbva.minibank.application.services;
 
 import com.bbva.minibank.application.repository.IClientRepository;
+import com.bbva.minibank.application.usecases.account.IAccountCreateUseCase;
 import com.bbva.minibank.application.usecases.client.IClientCreateUseCase;
 import com.bbva.minibank.application.usecases.client.IClientFindByUseCase;
 import com.bbva.minibank.application.usecases.client.IClientSaveUseCase;
+import com.bbva.minibank.domain.models.Account;
 import com.bbva.minibank.domain.models.Client;
 import com.bbva.minibank.infrastructure.mappers.ClientMapper;
 import com.bbva.minibank.presentation.request.client.ClientCreateRequest;
@@ -20,6 +22,9 @@ public class ClientService implements IClientCreateUseCase, IClientSaveUseCase, 
   @Qualifier("clientRepositoryImpl")
   @Autowired
   private IClientRepository clientRepository;
+  @Autowired
+  private IAccountCreateUseCase accountCreateUseCase;
+
   @Override
   public Client create(ClientCreateRequest request) {
     return clientMapper.toClient(request);
@@ -27,6 +32,8 @@ public class ClientService implements IClientCreateUseCase, IClientSaveUseCase, 
 
   @Override
   public Client save(Client client) {
+    List<Account> accounts = accountCreateUseCase.create(client);
+    client.setAccounts(accounts);
     return clientRepository.saveClient(client);
   }
 
