@@ -22,6 +22,5 @@ public class Client {
   private String phone;
   private String address;
   private List<Account> accounts;
-  private Client coHolder;
 
 }

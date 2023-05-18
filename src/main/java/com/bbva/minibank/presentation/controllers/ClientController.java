@@ -4,7 +4,7 @@ import com.bbva.minibank.application.usecases.client.IClientCreateUseCase;
 import com.bbva.minibank.application.usecases.client.IClientFindByUseCase;
 import com.bbva.minibank.application.usecases.client.IClientSaveUseCase;
 import com.bbva.minibank.domain.models.Client;
-import com.bbva.minibank.infrastructure.mappers.ClientMapper;
+import com.bbva.minibank.presentation.mappers.ClientPresentationMapper;
 import com.bbva.minibank.presentation.response.errors.ErrorResponse;
 import com.bbva.minibank.presentation.request.client.ClientCreateRequest;
 import com.bbva.minibank.presentation.response.client.ClientResponse;
@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -24,14 +25,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/client")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ClientController {
 
   private final IClientCreateUseCase clientCreateUseCase;
   private final IClientSaveUseCase clientSaveUseCase;
   private final IClientFindByUseCase clientFindByUseCase;
-  @Autowired
-  private ClientMapper clientMapper;
+  private final ClientPresentationMapper clientMapper;
 
   @PostMapping(value = "/create", consumes = "application/json", produces = "application/json")
   public ResponseEntity<?> create(@Valid @RequestBody ClientCreateRequest request, BindingResult bindingResult) {
@@ -45,7 +45,7 @@ public class ClientController {
     }
 
     Client client = clientCreateUseCase.create(request);
-    ClientResponse response = clientMapper.toResponse(clientSaveUseCase.save(client));
+    ClientResponse response = clientMapper.domainToResponse(clientSaveUseCase.save(client));
     return new ResponseEntity<>(response, null, 201);
 
   }
@@ -55,7 +55,7 @@ public class ClientController {
     List<ClientResponse> response = clientFindByUseCase
         .getAll()
         .stream()
-        .map(clientMapper::toResponse)
+        .map(clientMapper::domainToResponse)
         .collect(Collectors.toList());
     return new ResponseEntity<>(response, null, 200);
   }

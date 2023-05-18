@@ -7,27 +7,24 @@ import com.bbva.minibank.application.usecases.client.IClientFindByUseCase;
 import com.bbva.minibank.application.usecases.client.IClientSaveUseCase;
 import com.bbva.minibank.domain.models.Account;
 import com.bbva.minibank.domain.models.Client;
-import com.bbva.minibank.infrastructure.mappers.ClientMapper;
+import com.bbva.minibank.infrastructure.repositories.ClientRepositoryImpl;
+import com.bbva.minibank.presentation.mappers.ClientPresentationMapper;
 import com.bbva.minibank.presentation.request.client.ClientCreateRequest;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class ClientService implements IClientCreateUseCase, IClientSaveUseCase, IClientFindByUseCase {
 
-  @Autowired
-  private ClientMapper clientMapper;
-  @Qualifier("clientRepositoryImpl")
-  @Autowired
-  private IClientRepository clientRepository;
-  @Autowired
-  private IAccountCreateUseCase accountCreateUseCase;
+  private final IClientRepository clientRepository;
+  private final IAccountCreateUseCase accountCreateUseCase;
+  private final ClientPresentationMapper clientMapper;
 
   @Override
   public Client create(ClientCreateRequest request) {
-    return clientMapper.toClient(request);
+    return clientMapper.requestToDomain(request);
   }
 
   @Override

@@ -5,9 +5,13 @@ import com.bbva.minibank.infrastructure.entities.TransactionEntity;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TransactionMapper {
+public class TransactionEntityMapper {
 
   public TransactionEntity toEntity(Transaction transaction) {
+    return null;
+  }
+
+  public Transaction toDomain(TransactionEntity transactionEntity) {
     return null;
   }
 }

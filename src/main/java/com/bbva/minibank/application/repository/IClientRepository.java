@@ -4,7 +4,6 @@ import com.bbva.minibank.domain.models.Client;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 
-@Repository
 public interface IClientRepository {
 
   Client saveClient(Client client);
