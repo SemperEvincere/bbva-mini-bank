@@ -6,6 +6,7 @@ import com.bbva.minibank.infrastructure.entities.AccountEntity;
 import com.bbva.minibank.infrastructure.entities.TransactionEntity;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
@@ -13,15 +14,19 @@ import org.springframework.stereotype.Component;
 public class AccountEntityMapper {
 
 
-  public List<AccountEntity> domainToEntity(Client client) {
-    List<Account> accounts = client.getAccounts();
-    return accounts.stream()
-        .map(account -> AccountEntity.builder()
-            .accountNumber(account.getAccountNumber())
-            .balance(account.getBalance())
-            .currency(account.getCurrency())
-            .transactions(new ArrayList<TransactionEntity>())
-            .build())
-        .toList();
+  public Account entityToDomain(AccountEntity accountEntity) {
+    Account account = new Account();
+    account.setAccountNumber(accountEntity.getAccountNumber());
+    account.setBalance(accountEntity.getBalance());
+    account.setCurrency(accountEntity.getCurrency());
+    return account;
+  }
+
+  public Account domainToEntity(Account account) {
+    Account accountEntity = new Account();
+    accountEntity.setAccountNumber(account.getAccountNumber());
+    accountEntity.setBalance(account.getBalance());
+    accountEntity.setCurrency(account.getCurrency());
+    return accountEntity;
   }
 }

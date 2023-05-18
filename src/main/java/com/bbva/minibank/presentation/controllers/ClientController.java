@@ -3,13 +3,18 @@ package com.bbva.minibank.presentation.controllers;
 import com.bbva.minibank.application.usecases.client.IClientCreateUseCase;
 import com.bbva.minibank.application.usecases.client.IClientFindByUseCase;
 import com.bbva.minibank.application.usecases.client.IClientSaveUseCase;
+import com.bbva.minibank.domain.models.Account;
 import com.bbva.minibank.domain.models.Client;
+import com.bbva.minibank.presentation.mappers.AccountPresentationMapper;
 import com.bbva.minibank.presentation.mappers.ClientPresentationMapper;
+import com.bbva.minibank.presentation.response.account.AccountResponse;
+import com.bbva.minibank.presentation.response.client.ClientAllDataResponse;
 import com.bbva.minibank.presentation.response.errors.ErrorResponse;
 import com.bbva.minibank.presentation.request.client.ClientCreateRequest;
 import com.bbva.minibank.presentation.response.client.ClientResponse;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +38,7 @@ public class ClientController {
   private final IClientSaveUseCase clientSaveUseCase;
   private final IClientFindByUseCase clientFindByUseCase;
   private final ClientPresentationMapper clientMapper;
+  private final AccountPresentationMapper accountMapper;
 
   @PostMapping(value = "/create", consumes = "application/json", produces = "application/json")
   public ResponseEntity<?> create(@Valid @RequestBody ClientCreateRequest request, BindingResult bindingResult) {
@@ -57,6 +64,14 @@ public class ClientController {
         .stream()
         .map(clientMapper::domainToResponse)
         .collect(Collectors.toList());
+    return new ResponseEntity<>(response, null, 200);
+  }
+
+  @GetMapping(value = "/{id}", produces = "application/json")
+  public ResponseEntity<ClientAllDataResponse> getAllData(@PathVariable("id") UUID id) {
+    Client client = clientFindByUseCase.findById(id);
+    List<AccountResponse> accountsResponse = accountMapper.domainToResponseList(client.getAccounts());
+    ClientAllDataResponse response = clientMapper.domainToAllDataResponse(client, accountsResponse);
     return new ResponseEntity<>(response, null, 200);
   }
 }
