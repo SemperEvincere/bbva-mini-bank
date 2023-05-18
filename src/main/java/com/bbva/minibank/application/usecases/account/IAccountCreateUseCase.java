@@ -10,4 +10,5 @@ public interface IAccountCreateUseCase {
   List<Account> create();
 
 
+  void saveAll(List<Account> accountsDefault);
 }

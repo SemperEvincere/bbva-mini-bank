@@ -11,15 +11,15 @@ public class ClientEntityMapper {
 
 
   public ClientEntity domainToEntity(Client client) {
-    ClientEntity clientEntity = new ClientEntity();
-    clientEntity.setFirstName(client.getFirstName());
-    clientEntity.setLastName(client.getLastName());
-    clientEntity.setEmail(client.getEmail());
-    clientEntity.setPhone(client.getPhone());
-    clientEntity.setAddress(client.getAddress());
-    clientEntity.setAccounts(new ArrayList<>());
-
-    return clientEntity;
+    return ClientEntity.builder()
+        .id(client.getId())
+        .firstName(client.getFirstName())
+        .lastName(client.getLastName())
+        .email(client.getEmail())
+        .phone(client.getPhone())
+        .address(client.getAddress())
+        .accounts(new ArrayList<>())
+        .build();
   }
 
 
@@ -32,7 +32,7 @@ public class ClientEntityMapper {
     client.setEmail(clientEntity.getEmail());
     client.setPhone(clientEntity.getPhone());
     client.setAddress(clientEntity.getAddress());
-
+    client.setAccounts(new ArrayList<>());
     for (AccountEntity accountEntity : clientEntity.getAccounts()) {
       client.getAccounts().add(accountEntity.getAccountNumber());
     }

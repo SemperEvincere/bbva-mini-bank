@@ -39,8 +39,10 @@ public class ClientRepositoryImpl implements IClientRepository  {
     List<AccountEntity> accountEntities = client.getAccounts()
         .stream()
         .map(
-            accountNumber -> accountEntityMapper.domainToEntity(accountService.findByAccountNumber(accountNumber))
-        )
+            accountNumber ->
+                accountEntityMapper.domainToEntity(
+                    accountService.findByAccountNumber(accountNumber)
+                ))
         .collect(Collectors.toList());
     clientEntity.setAccounts(accountEntities);
     clientSpringRepository.save(clientEntity);

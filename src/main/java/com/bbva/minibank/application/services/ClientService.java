@@ -23,6 +23,7 @@ public class ClientService implements IClientCreateUseCase, IClientSaveUseCase, 
   private final IClientRepository clientRepository;
   private final IAccountCreateUseCase accountCreateUseCase;
   private final ClientPresentationMapper clientMapper;
+  private final AccountService accountService;
 
   @Override
   public Client create(ClientCreateRequest request) {
@@ -34,8 +35,9 @@ public class ClientService implements IClientCreateUseCase, IClientSaveUseCase, 
     List<Account> accountsDefault = accountCreateUseCase.create();
     for (Account account : accountsDefault) {
       client.getAccounts().add(account.getAccountNumber());
+      account.getHolders().add(client.getId());
     }
-
+    accountService.saveAll(accountsDefault);
     return clientRepository.saveClient(client);
   }
 

@@ -1,5 +1,6 @@
 package com.bbva.minibank.domain.models;
 
+import com.bbva.minibank.domain.models.enums.ClientTypeEnum;
 import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -11,11 +12,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
+@NoArgsConstructor
 public class Client {
 
-  private UUID id;
+
+  @Builder.Default
+  private UUID id = UUID.randomUUID();
+  private ClientTypeEnum type;
   private String lastName;
   private String firstName;
   private String email;

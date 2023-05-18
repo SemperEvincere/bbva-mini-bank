@@ -15,18 +15,20 @@ public class AccountEntityMapper {
 
 
   public Account entityToDomain(AccountEntity accountEntity) {
-    Account account = new Account();
-    account.setAccountNumber(accountEntity.getAccountNumber());
-    account.setBalance(accountEntity.getBalance());
-    account.setCurrency(accountEntity.getCurrency());
-    return account;
+    return Account.builder()
+        .accountNumber(accountEntity.getAccountNumber())
+        .balance(accountEntity.getBalance())
+        .currency(accountEntity.getCurrency())
+        .build();
   }
 
-  public Account domainToEntity(Account account) {
-    Account accountEntity = new Account();
-    accountEntity.setAccountNumber(account.getAccountNumber());
-    accountEntity.setBalance(account.getBalance());
-    accountEntity.setCurrency(account.getCurrency());
-    return accountEntity;
+  public AccountEntity domainToEntity(Account account) {
+    return AccountEntity.builder()
+        .accountNumber(account.getAccountNumber())
+        .balance(account.getBalance())
+        .currency(account.getCurrency())
+        .holders(account.getHolders())
+        .transactions(new ArrayList<>())
+        .build();
   }
 }

@@ -24,14 +24,14 @@ public class ClientPresentationMapper {
     }
 
   public Client requestToDomain(ClientCreateRequest request) {
-    Client client = new Client();
-    client.setFirstName(request.getFirstName());
-    client.setLastName(request.getLastName());
-    client.setEmail(request.getEmail());
-    client.setPhone(request.getPhone());
-    client.setAddress(request.getAddress());
-    client.setAccounts(new ArrayList<>());
-    return client;
+    return Client.builder()
+        .firstName(request.getFirstName())
+        .lastName(request.getLastName())
+        .email(request.getEmail())
+        .phone(request.getPhone())
+        .address(request.getAddress())
+        .accounts(new ArrayList<>())
+        .build();
   }
 
   public ClientAllDataResponse domainToAllDataResponse(Client client, List<AccountResponse> accountResponse) {

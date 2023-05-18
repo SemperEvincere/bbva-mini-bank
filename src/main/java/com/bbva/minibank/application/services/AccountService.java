@@ -24,13 +24,20 @@ public class AccountService implements IAccountCreateUseCase, IAccountFindUseCas
     Account accountARS = new Account();
     accountARS.setCurrency(CurrencyEnum.valueOf("ARS"));
     accountARS.setBalance(BigDecimal.valueOf(0.0));
+    accountARS.setHolders(new ArrayList<UUID>());
     Account accountUSD = new Account();
     accountUSD.setCurrency(CurrencyEnum.valueOf("USD"));
     accountUSD.setBalance(BigDecimal.valueOf(0.0));
+    accountUSD.setHolders(new ArrayList<UUID>());
     accountsDefault.add(accountARS);
     accountsDefault.add(accountUSD);
 
     return accountsDefault;
+  }
+
+  @Override
+  public void saveAll(List<Account> accountsDefault) {
+    accountRepository.saveAll(accountsDefault);
   }
 
   @Override
