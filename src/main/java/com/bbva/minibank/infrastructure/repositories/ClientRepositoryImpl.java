@@ -2,6 +2,7 @@ package com.bbva.minibank.infrastructure.repositories;
 
 import com.bbva.minibank.application.repository.IClientRepository;
 import com.bbva.minibank.domain.models.Client;
+import com.bbva.minibank.infrastructure.entities.AccountEntity;
 import com.bbva.minibank.infrastructure.entities.ClientEntity;
 import com.bbva.minibank.infrastructure.mappers.AccountEntityMapper;
 import com.bbva.minibank.infrastructure.mappers.ClientEntityMapper;
@@ -31,7 +32,11 @@ public class ClientRepositoryImpl implements IClientRepository  {
   @Override
   public Client saveClient(Client client) {
     ClientEntity clientEntity = clientEntityMapper.domainToEntity(client);
+    List<AccountEntity> accountEntities = accountEntityMapper.domainToEntity(client);
+//    accountEntities.forEach(accountEntity -> accountEntity.setHolders(List.of(clientEntity)));
+    clientEntity.setAccounts(accountEntities);
     clientSpringRepository.save(clientEntity);
+
     return clientEntityMapper.entityToDomain(clientEntity);
   }
 

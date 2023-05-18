@@ -40,9 +40,5 @@ public class ClientEntity {
   private String address;
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<AccountEntity> accounts;
-  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "coholder_id")
-  private ClientEntity coHolder;
-
 
 }

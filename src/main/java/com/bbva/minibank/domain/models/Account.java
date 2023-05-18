@@ -26,7 +26,6 @@ public class Account {
   @Enumerated(EnumType.STRING)
   @NotNull
   private CurrencyEnum currency;
-  @UniqueElements
   private List<Client> holders;
   private List<Transaction> transactions;
 
