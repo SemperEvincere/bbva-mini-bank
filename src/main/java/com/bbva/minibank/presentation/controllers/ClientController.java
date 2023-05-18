@@ -10,12 +10,14 @@ import com.bbva.minibank.presentation.request.client.ClientCreateRequest;
 import com.bbva.minibank.presentation.response.client.ClientResponse;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,6 +57,13 @@ public class ClientController {
         .stream()
         .map(clientMapper::toResponse)
         .collect(Collectors.toList());
+    return new ResponseEntity<>(response, null, 200);
+  }
+
+  @GetMapping(value = "/{id}", produces = "application/json")
+  public ResponseEntity<?> getById(@PathVariable("id") UUID id) {
+    ClientResponse response = clientMapper.toResponse(clientFindByUseCase.findById(id));
+
     return new ResponseEntity<>(response, null, 200);
   }
 }

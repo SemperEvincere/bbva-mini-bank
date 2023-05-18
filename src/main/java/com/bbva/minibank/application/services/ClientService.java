@@ -8,6 +8,7 @@ import com.bbva.minibank.domain.models.Client;
 import com.bbva.minibank.infrastructure.mappers.ClientMapper;
 import com.bbva.minibank.presentation.request.client.ClientCreateRequest;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -33,5 +34,10 @@ public class ClientService implements IClientCreateUseCase, IClientSaveUseCase, 
   @Override
   public List<Client> getAll() {
     return clientRepository.getAll();
+  }
+
+  @Override
+  public Client findById(UUID id) {
+    return clientRepository.findById(id);
   }
 }
