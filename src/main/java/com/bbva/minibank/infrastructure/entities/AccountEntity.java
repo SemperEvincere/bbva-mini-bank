@@ -3,6 +3,7 @@ package com.bbva.minibank.infrastructure.entities;
 import com.bbva.minibank.domain.models.enums.CurrencyEnum;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -13,9 +14,20 @@ import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "accounts")
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class AccountEntity {
 
   @Id
@@ -24,8 +36,8 @@ public class AccountEntity {
   private BigDecimal balance;
   @Enumerated(EnumType.STRING)
   private CurrencyEnum currency;
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  private List<ClientEntity> holders;
+  @ElementCollection(fetch = FetchType.LAZY)
+  private List<UUID> holders;
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<TransactionEntity> transactions;
 
