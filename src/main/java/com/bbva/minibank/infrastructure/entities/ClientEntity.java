@@ -29,8 +29,6 @@ import org.hibernate.annotations.GenericGenerator;
 @Builder
 public class ClientEntity {
 
-  @GeneratedValue(generator = "system-uuid")
-  @GenericGenerator(name = "system-uuid", strategy = "uuid2")
   @Id
   private UUID id;
   @Nonnull

@@ -1,5 +1,6 @@
 package com.bbva.minibank.presentation.controllers;
 
+import com.bbva.minibank.application.services.AccountService;
 import com.bbva.minibank.application.usecases.client.IClientCreateUseCase;
 import com.bbva.minibank.application.usecases.client.IClientFindByUseCase;
 import com.bbva.minibank.application.usecases.client.IClientSaveUseCase;
@@ -16,9 +17,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -39,6 +38,7 @@ public class ClientController {
   private final IClientFindByUseCase clientFindByUseCase;
   private final ClientPresentationMapper clientMapper;
   private final AccountPresentationMapper accountMapper;
+  private final AccountService accountService;
 
   @PostMapping(value = "/create", consumes = "application/json", produces = "application/json")
   public ResponseEntity<?> create(@Valid @RequestBody ClientCreateRequest request, BindingResult bindingResult) {
@@ -68,9 +68,10 @@ public class ClientController {
   }
 
   @GetMapping(value = "/{id}", produces = "application/json")
-  public ResponseEntity<ClientAllDataResponse> getAllData(@PathVariable("id") UUID id) {
+  public ResponseEntity<?> getAllData(@PathVariable("id") UUID id) {
     Client client = clientFindByUseCase.findById(id);
-    List<AccountResponse> accountsResponse = accountMapper.domainToResponseList(client.getAccounts());
+    List<Account> accounts = client.getAccounts().stream().map(accountService::findByAccountNumber).toList();
+    List<AccountResponse> accountsResponse = accountMapper.domainToResponseList(accounts);
     ClientAllDataResponse response = clientMapper.domainToAllDataResponse(client, accountsResponse);
     return new ResponseEntity<>(response, null, 200);
   }

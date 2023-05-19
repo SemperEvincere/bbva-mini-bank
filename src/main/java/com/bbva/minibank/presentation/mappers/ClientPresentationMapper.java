@@ -35,6 +35,7 @@ public class ClientPresentationMapper {
   }
 
   public ClientAllDataResponse domainToAllDataResponse(Client client, List<AccountResponse> accountResponse) {
+
     return ClientAllDataResponse.builder()
         .id(client.getId())
         .firstName(client.getFirstName())

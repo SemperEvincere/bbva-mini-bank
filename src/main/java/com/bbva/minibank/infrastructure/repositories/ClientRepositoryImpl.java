@@ -10,6 +10,7 @@ import com.bbva.minibank.infrastructure.mappers.ClientEntityMapper;
 import com.bbva.minibank.infrastructure.mappers.TransactionEntityMapper;
 import com.bbva.minibank.infrastructure.repositories.springdatajpa.IClientSpringRepository;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,7 @@ public class ClientRepositoryImpl implements IClientRepository  {
 
   @Override
   public Client findById(UUID id) {
-    return clientEntityMapper.entityToDomain(clientSpringRepository.findById(id).orElseThrow());
+    Optional<ClientEntity> optionalClient = clientSpringRepository.findById(id);
+    return optionalClient.map(clientEntityMapper::entityToDomain).orElse(null);
   }
 }

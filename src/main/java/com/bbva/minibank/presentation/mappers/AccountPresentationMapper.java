@@ -2,22 +2,26 @@ package com.bbva.minibank.presentation.mappers;
 
 import com.bbva.minibank.domain.models.Account;
 import com.bbva.minibank.presentation.response.account.AccountResponse;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AccountPresentationMapper {
 
-  public List<AccountResponse> domainToResponseList(List<UUID> accounts) {
-    return accounts.stream()
-        .map(this::domainToResponse)
-        .collect(java.util.stream.Collectors.toList());
+  public List<AccountResponse> domainToResponseList(List<Account> accounts) {
+    List<AccountResponse> accountResponses = new ArrayList<>();
+    for (Account account : accounts) {
+      accountResponses.add(domainToResponse(account));
+    }
+    return accountResponses;
   }
 
-  private AccountResponse domainToResponse(UUID uuid) {
+  private AccountResponse domainToResponse(Account account) {
     return AccountResponse.builder()
-        .id(uuid)
+        .id(account.getAccountNumber())
+        .balance(account.getBalance())
+        .currency(account.getCurrency().name())
         .build();
   }
 }
