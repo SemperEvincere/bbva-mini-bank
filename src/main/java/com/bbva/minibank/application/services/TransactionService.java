@@ -25,6 +25,8 @@ public class TransactionService implements
   private final ITransactionRepository transactionRepository;
   private final IAccountFindUseCase accountFind;
   private final IAccountUpdateUseCase accountUpdate;
+  private final ClientService clientService;
+  private final AccountService accountService;
 
   public Transaction createTransaction(TransactionCreateRequest transactionCreateRequest) {
     return Transaction.builder()
@@ -38,12 +40,9 @@ public class TransactionService implements
   @Override
   public Transaction deposit(Transaction transaction,
       Client client) {
-    UUID accountClient = client.getAccounts().stream()
-        .filter(acc -> acc.equals(transaction.getAccountNumberTo()))
-        .findFirst()
-        .orElseThrow(() -> new RuntimeException("Cuenta no encontrada"));
+    UUID accountClient = clientService.getAccountClient(transaction, client);
     Account accountSaved = accountFind.findByAccountNumber(accountClient);
-    accountSaved.setBalance(accountSaved.getBalance().add(transaction.getAmount()));
+    accountSaved.setBalance(accountService.add(accountSaved.getBalance(), transaction.getAmount()));
 
     if(accountSaved.getTransactions()== null || accountSaved.getTransactions().isEmpty())
       accountSaved.setTransactions(new ArrayList<>());
@@ -53,9 +52,19 @@ public class TransactionService implements
     return transactionSaved;
   }
 
-  @Override
-  public void withdraw(Transaction transaction) {
 
+
+  @Override
+  public Transaction withdraw(Transaction transaction, Client client) {
+    UUID accountClient = clientService.getAccountClient(transaction, client);
+    Account accountSaved = accountFind.findByAccountNumber(accountClient);
+    accountSaved.setBalance(accountService.substract(accountSaved.getBalance(), transaction.getAmount()));
+    if(accountSaved.getTransactions()== null || accountSaved.getTransactions().isEmpty())
+      accountSaved.setTransactions(new ArrayList<>());
+    Transaction transactionSaved = transactionRepository.save(transaction);
+    accountSaved.getTransactions().add(transactionSaved);
+    accountUpdate.update(accountSaved);
+    return transactionSaved;
   }
 
   @Override

@@ -3,6 +3,7 @@ package com.bbva.minibank.application.services;
 import com.bbva.minibank.application.repository.IAccountRepository;
 import com.bbva.minibank.application.usecases.account.IAccountCreateUseCase;
 import com.bbva.minibank.application.usecases.account.IAccountFindUseCase;
+import com.bbva.minibank.application.usecases.account.IAccountOperationsUseCase;
 import com.bbva.minibank.application.usecases.account.IAccountUpdateUseCase;
 import com.bbva.minibank.domain.models.Account;
 import com.bbva.minibank.domain.models.enums.CurrencyEnum;
@@ -18,7 +19,8 @@ public class AccountService
     implements
     IAccountCreateUseCase,
     IAccountFindUseCase,
-    IAccountUpdateUseCase {
+    IAccountUpdateUseCase,
+    IAccountOperationsUseCase {
 
   @Autowired
   private IAccountRepository accountRepository;
@@ -56,4 +58,15 @@ public class AccountService
   }
 
 
+  @Override
+  public BigDecimal substract(BigDecimal balance,
+      BigDecimal amount) {
+    return balance.subtract(amount);
+  }
+
+  @Override
+  public BigDecimal add(BigDecimal balance,
+      BigDecimal amount) {
+    return balance.add(amount);
+  }
 }

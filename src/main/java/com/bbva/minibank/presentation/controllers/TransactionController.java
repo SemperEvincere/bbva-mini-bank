@@ -8,8 +8,9 @@ import com.bbva.minibank.domain.models.Transaction;
 import com.bbva.minibank.domain.models.enums.TransactionTypeEnum;
 import com.bbva.minibank.presentation.mappers.TransactionPresentationMapper;
 import com.bbva.minibank.presentation.request.transaction.TransactionCreateRequest;
-import com.bbva.minibank.presentation.response.TransactionDepositResponse;
+import com.bbva.minibank.presentation.response.transaction.TransactionDepositResponse;
 import com.bbva.minibank.presentation.response.errors.ErrorResponse;
+import com.bbva.minibank.presentation.response.transaction.TransactionWithdrawalResponse;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
@@ -33,7 +34,7 @@ public class TransactionController {
   private final ITransactionBalanceUseCase transactionBalanceUseCase;
   private final TransactionPresentationMapper transactionMapper;
 
-  @PostMapping(value = "/deposit", consumes = "application/json", produces = "application/json")
+  @PostMapping(value = "/operation", consumes = "application/json", produces = "application/json")
   public ResponseEntity<?> deposit(@Valid @RequestBody
       TransactionCreateRequest transactionCreateRequest, BindingResult bindingResult) {
     if (bindingResult.hasErrors() && bindingResult.hasFieldErrors()) {
@@ -46,12 +47,13 @@ public class TransactionController {
     Transaction transaction = transactionCreateUseCase.createTransaction(transactionCreateRequest);
     switch (TransactionTypeEnum.valueOf(transactionCreateRequest.getType())) {
       case DEPOSIT:
-        Transaction transactionSaved = transactionBalanceUseCase.deposit(transaction, clientSaved);
-        TransactionDepositResponse response = transactionMapper.toDepositResponse(transactionSaved, clientSaved);
+        Transaction deposit = transactionBalanceUseCase.deposit(transaction, clientSaved);
+        TransactionDepositResponse response = transactionMapper.toDepositResponse(deposit, clientSaved);
         return ResponseEntity.ok(response);
-      case WITHDRAWAL:
-        transactionBalanceUseCase.withdraw(transaction);
-        return ResponseEntity.ok().build();
+      case WITHDRAW:
+        Transaction withdraw = transactionBalanceUseCase.withdraw(transaction, clientSaved);
+        TransactionWithdrawalResponse responseWithdraw = transactionMapper.toWithdrawalResponse(withdraw, clientSaved);
+        return ResponseEntity.ok(responseWithdraw);
       case TRANSFER:
         transactionBalanceUseCase.transfer(transaction, clientSaved);
         return ResponseEntity.ok().build();

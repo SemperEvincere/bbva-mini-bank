@@ -2,7 +2,8 @@ package com.bbva.minibank.presentation.mappers;
 
 import com.bbva.minibank.domain.models.Client;
 import com.bbva.minibank.domain.models.Transaction;
-import com.bbva.minibank.presentation.response.TransactionDepositResponse;
+import com.bbva.minibank.presentation.response.transaction.TransactionDepositResponse;
+import com.bbva.minibank.presentation.response.transaction.TransactionWithdrawalResponse;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -20,5 +21,17 @@ public class TransactionPresentationMapper {
 
         .build();
 
+  }
+
+  public TransactionWithdrawalResponse toWithdrawalResponse(Transaction withdraw,
+      Client clientSaved) {
+    return TransactionWithdrawalResponse.builder()
+        .id(withdraw.getId().toString())
+        .type(withdraw.getType().toString())
+        .amountExtracted(withdraw.getAmount().toString())
+        .accountNumberFrom(withdraw.getAccountNumberFrom().toString())
+        .clientFullName(String.format("%s, %s", clientSaved.getLastName(), clientSaved.getFirstName()))
+        .createdAt(withdraw.getCreatedAt().toString())
+        .build();
   }
 }

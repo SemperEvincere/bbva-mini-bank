@@ -8,7 +8,7 @@ Transaction deposit(Transaction transaction,
     Client clientSaved);
 
 
-  void withdraw(Transaction transaction);
+  Transaction withdraw(Transaction transaction, Client client);
 
   void transfer(Transaction transaction,
       Client clientSaved);

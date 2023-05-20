@@ -1,4 +1,4 @@
-package com.bbva.minibank.presentation.response;
+package com.bbva.minibank.presentation.response.transaction;
 
 import lombok.Builder;
 import lombok.Getter;

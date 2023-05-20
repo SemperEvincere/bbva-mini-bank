@@ -7,6 +7,7 @@ import com.bbva.minibank.application.usecases.client.IClientFindByUseCase;
 import com.bbva.minibank.application.usecases.client.IClientSaveUseCase;
 import com.bbva.minibank.domain.models.Account;
 import com.bbva.minibank.domain.models.Client;
+import com.bbva.minibank.domain.models.Transaction;
 import com.bbva.minibank.presentation.mappers.ClientPresentationMapper;
 import com.bbva.minibank.presentation.request.client.ClientCreateRequest;
 import java.util.List;
@@ -47,5 +48,13 @@ public class ClientService implements IClientCreateUseCase, IClientSaveUseCase, 
   @Override
   public Client findById(UUID id) {
     return clientRepository.findById(id);
+  }
+
+  public UUID getAccountClient(Transaction transaction,
+      Client client) {
+    return client.getAccounts().stream()
+        .filter(acc -> acc.equals(transaction.getAccountNumberTo()))
+        .findFirst()
+        .orElseThrow(() -> new RuntimeException("Cuenta no encontrada"));
   }
 }
