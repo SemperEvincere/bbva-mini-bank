@@ -68,11 +68,13 @@ public class ClientController {
   }
 
   @GetMapping(value = "/{id}", produces = "application/json")
-  public ResponseEntity<?> getAllData(@PathVariable("id") UUID id) {
+  public ResponseEntity<?> getOne(@PathVariable("id") UUID id) {
     Client client = clientFindByUseCase.findById(id);
     List<Account> accounts = client.getAccounts().stream().map(accountService::findByAccountNumber).toList();
     List<AccountResponse> accountsResponse = accountMapper.domainToResponseList(accounts);
     ClientAllDataResponse response = clientMapper.domainToAllDataResponse(client, accountsResponse);
     return new ResponseEntity<>(response, null, 200);
   }
+
+
 }

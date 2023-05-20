@@ -38,7 +38,7 @@ public class AccountEntity {
   private CurrencyEnum currency;
   @ElementCollection(fetch = FetchType.LAZY)
   private List<UUID> holders;
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   private List<TransactionEntity> transactions;
 
 }

@@ -3,6 +3,7 @@ package com.bbva.minibank.application.services;
 import com.bbva.minibank.application.repository.IAccountRepository;
 import com.bbva.minibank.application.usecases.account.IAccountCreateUseCase;
 import com.bbva.minibank.application.usecases.account.IAccountFindUseCase;
+import com.bbva.minibank.application.usecases.account.IAccountUpdateUseCase;
 import com.bbva.minibank.domain.models.Account;
 import com.bbva.minibank.domain.models.enums.CurrencyEnum;
 import java.math.BigDecimal;
@@ -13,7 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AccountService implements IAccountCreateUseCase, IAccountFindUseCase{
+public class AccountService
+    implements
+    IAccountCreateUseCase,
+    IAccountFindUseCase,
+    IAccountUpdateUseCase {
 
   @Autowired
   private IAccountRepository accountRepository;
@@ -44,4 +49,11 @@ public class AccountService implements IAccountCreateUseCase, IAccountFindUseCas
   public Account findByAccountNumber(UUID accountNumber) {
     return accountRepository.findByAccountNumber(accountNumber);
   }
+
+  @Override
+  public Account update(Account accountUpdate) {
+    return accountRepository.save(accountUpdate);
+  }
+
+
 }

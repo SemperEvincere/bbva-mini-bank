@@ -33,4 +33,11 @@ public class AccountRepositoryImpl implements IAccountRepository {
         .toList();
     accountSpringRepository.saveAll(accountEntities);
   }
+
+  @Override
+  public Account save(Account accountUpdate) {
+    AccountEntity accountEntity = accountEntityMapper.domainToEntity(accountUpdate);
+    AccountEntity accountSaved = accountSpringRepository.save(accountEntity);
+    return accountEntityMapper.entityToDomain(accountSaved);
+  }
 }

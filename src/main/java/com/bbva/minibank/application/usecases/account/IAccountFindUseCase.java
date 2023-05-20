@@ -5,4 +5,5 @@ import java.util.UUID;
 
 public interface IAccountFindUseCase {
   Account findByAccountNumber(UUID accountNumber);
+
 }

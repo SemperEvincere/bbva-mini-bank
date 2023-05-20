@@ -9,4 +9,6 @@ public interface IAccountRepository {
   Account findByAccountNumber(UUID accountNumber);
 
   void saveAll(List<Account> accountsDefault);
+
+  Account save(Account accountUpdate);
 }
