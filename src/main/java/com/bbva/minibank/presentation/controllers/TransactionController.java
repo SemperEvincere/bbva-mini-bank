@@ -10,6 +10,7 @@ import com.bbva.minibank.presentation.mappers.TransactionPresentationMapper;
 import com.bbva.minibank.presentation.request.transaction.TransactionCreateRequest;
 import com.bbva.minibank.presentation.response.transaction.TransactionDepositResponse;
 import com.bbva.minibank.presentation.response.errors.ErrorResponse;
+import com.bbva.minibank.presentation.response.transaction.TransactionTransferResponse;
 import com.bbva.minibank.presentation.response.transaction.TransactionWithdrawalResponse;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -35,7 +36,7 @@ public class TransactionController {
   private final TransactionPresentationMapper transactionMapper;
 
   @PostMapping(value = "/operation", consumes = "application/json", produces = "application/json")
-  public ResponseEntity<?> deposit(@Valid @RequestBody
+  public ResponseEntity<?> operation(@Valid @RequestBody
       TransactionCreateRequest transactionCreateRequest, BindingResult bindingResult) {
     if (bindingResult.hasErrors() && bindingResult.hasFieldErrors()) {
       List<String> errors = bindingResult.getFieldErrors().stream().map(FieldError::getDefaultMessage).collect(Collectors.toList());
@@ -55,8 +56,10 @@ public class TransactionController {
         TransactionWithdrawalResponse responseWithdraw = transactionMapper.toWithdrawalResponse(withdraw, clientSaved);
         return ResponseEntity.ok(responseWithdraw);
       case TRANSFER:
-        transactionBalanceUseCase.transfer(transaction, clientSaved);
-        return ResponseEntity.ok().build();
+        Transaction transfer = transactionBalanceUseCase.transfer(transaction, clientSaved);
+        TransactionTransferResponse responseTransfer = transactionMapper.toTransferResponse(transfer, clientSaved);
+
+        return ResponseEntity.ok(responseTransfer);
       default:
         return ResponseEntity.badRequest().body("Tipo de transacción no válido");
 

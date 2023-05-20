@@ -10,6 +10,6 @@ Transaction deposit(Transaction transaction,
 
   Transaction withdraw(Transaction transaction, Client client);
 
-  void transfer(Transaction transaction,
+  Transaction transfer(Transaction transaction,
       Client clientSaved);
 }

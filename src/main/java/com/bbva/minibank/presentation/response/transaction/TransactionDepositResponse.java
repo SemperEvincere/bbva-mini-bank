@@ -12,7 +12,7 @@ public class TransactionDepositResponse {
   private String id;
   private String type;
   private String amount;
-  private String accountNumberTo;
+  private String accountNumber;
   private String clientFullName;
   private String createdAt;
 }

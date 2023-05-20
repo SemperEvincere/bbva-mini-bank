@@ -53,7 +53,7 @@ public class ClientService implements IClientCreateUseCase, IClientSaveUseCase, 
   public UUID getAccountClient(Transaction transaction,
       Client client) {
     return client.getAccounts().stream()
-        .filter(acc -> acc.equals(transaction.getAccountNumberTo()))
+        .filter(acc -> acc.equals(transaction.getAccountNumberFrom()))
         .findFirst()
         .orElseThrow(() -> new RuntimeException("Cuenta no encontrada"));
   }

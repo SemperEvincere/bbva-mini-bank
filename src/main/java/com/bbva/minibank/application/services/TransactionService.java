@@ -32,8 +32,8 @@ public class TransactionService implements
     return Transaction.builder()
         .createdAt(LocalDateTime.now())
         .type(TransactionTypeEnum.valueOf(transactionCreateRequest.getType()))
-        .accountNumberFrom(transactionCreateRequest.getIdAccountDestination().isBlank()? null : UUID.fromString(transactionCreateRequest.getIdAccountDestination()))
-        .accountNumberTo(UUID.fromString(transactionCreateRequest.getIdAccountDestination()))
+        .accountNumberFrom(transactionCreateRequest.getIdAccountOrigin().isBlank()? null : UUID.fromString(transactionCreateRequest.getIdAccountOrigin()))
+        .accountNumberTo(transactionCreateRequest.getIdAccountDestination().isBlank()? null : UUID.fromString(transactionCreateRequest.getIdAccountDestination()))
         .amount(transactionCreateRequest.getAmount())
         .build();
   }
@@ -68,9 +68,24 @@ public class TransactionService implements
   }
 
   @Override
-  public void transfer(Transaction transaction,
+  public Transaction transfer(Transaction transaction,
       Client clientSaved) {
+    UUID accountClient = clientService.getAccountClient(transaction, clientSaved);
+    Account accountOrigin = accountFind.findByAccountNumber(accountClient);
+    Account accountDestination = accountFind.findByAccountNumber(transaction.getAccountNumberTo());
+    accountOrigin.setBalance(accountService.substract(accountOrigin.getBalance(), transaction.getAmount()));
+    accountDestination.setBalance(accountService.add(accountDestination.getBalance(), transaction.getAmount()));
+    if(accountOrigin.getTransactions()== null || accountOrigin.getTransactions().isEmpty())
+      accountOrigin.setTransactions(new ArrayList<>());
+    if(accountDestination.getTransactions()== null || accountDestination.getTransactions().isEmpty())
+      accountDestination.setTransactions(new ArrayList<>());
+    Transaction transactionSaved = transactionRepository.save(transaction);
+    accountOrigin.getTransactions().add(transactionSaved);
+    accountDestination.getTransactions().add(transactionSaved);
+    accountUpdate.update(accountOrigin);
+    accountUpdate.update(accountDestination);
 
+    return transactionSaved;
   }
 
 
