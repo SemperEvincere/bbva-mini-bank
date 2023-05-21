@@ -2,6 +2,7 @@ package com.bbva.minibank.infrastructure.entities;
 
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -31,14 +32,20 @@ public class ClientEntity {
 
   @Id
   private UUID id;
-  @Nonnull
+
+  @Column(nullable = false)
   private String lastName;
-  @Nonnull
+
+  @Column(nullable = false)
   private String firstName;
+
   @Nonnull
   private String email;
+
   private String phone;
+
   private String address;
+
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<AccountEntity> accounts;
 

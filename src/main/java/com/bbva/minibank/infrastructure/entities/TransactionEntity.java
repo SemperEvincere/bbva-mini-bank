@@ -32,12 +32,17 @@ public class TransactionEntity {
   @Id
   @GeneratedValue(generator = "UUID")
   UUID id;
+
   @Temporal(TemporalType.TIMESTAMP)
   private LocalDateTime timestamp;
+
   @Enumerated(value = EnumType.STRING)
   private TransactionTypeEnum type;
+
   private BigDecimal amount;
+
   private UUID accountNumberFrom;
+
   private UUID accountNumberTo;
 
 }

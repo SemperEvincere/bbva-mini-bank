@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -42,6 +44,19 @@ public class ClientController {
 
   @PostMapping(value = "/create", consumes = "application/json", produces = "application/json")
   public ResponseEntity<?> create(@Valid @RequestBody ClientCreateRequest request, BindingResult bindingResult) {
+    ResponseEntity<ErrorResponse> errorResponse = getErrorResponseResponseEntity(bindingResult);
+    if (errorResponse != null) {
+      return errorResponse;
+    }
+
+    Client client = clientCreateUseCase.create(request);
+    Client savedClient = clientSaveUseCase.save(client);
+    ClientResponse response = clientMapper.domainToResponse(savedClient);
+    return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
+  }
+
+  private static ResponseEntity<ErrorResponse> getErrorResponseResponseEntity(BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
       List<String> errors = bindingResult.getFieldErrors().stream()
           .map(FieldError::getDefaultMessage)
@@ -50,30 +65,25 @@ public class ClientController {
       ErrorResponse errorResponse = new ErrorResponse("Error de validación", errors);
       return ResponseEntity.badRequest().body(errorResponse);
     }
-
-    Client client = clientCreateUseCase.create(request);
-    ClientResponse response = clientMapper.domainToResponse(clientSaveUseCase.save(client));
-    return new ResponseEntity<>(response, null, 201);
-
+    return null;
   }
 
   @GetMapping(value = "/", produces = "application/json")
-  public ResponseEntity<List<ClientResponse>> getAll() {
-    List<ClientResponse> response = clientFindByUseCase
-        .getAll()
+  @ResponseBody
+  public List<ClientResponse> getAll() {
+    return clientFindByUseCase.getAll()
         .stream()
         .map(clientMapper::domainToResponse)
         .collect(Collectors.toList());
-    return new ResponseEntity<>(response, null, 200);
   }
 
   @GetMapping(value = "/{id}", produces = "application/json")
-  public ResponseEntity<?> getOne(@PathVariable("id") UUID id) {
+  @ResponseBody
+  public ClientAllDataResponse getOne(@PathVariable("id") UUID id) {
     Client client = clientFindByUseCase.findById(id);
     List<Account> accounts = client.getAccounts().stream().map(accountService::findByAccountNumber).toList();
     List<AccountResponse> accountsResponse = accountMapper.domainToResponseList(accounts);
-    ClientAllDataResponse response = clientMapper.domainToAllDataResponse(client, accountsResponse);
-    return new ResponseEntity<>(response, null, 200);
+    return clientMapper.domainToAllDataResponse(client, accountsResponse);
   }
 
 

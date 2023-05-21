@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"lastName\" : \"semper\",\r\n    \"firstName\" : \"evincere\",\r\n    \"email\" : \"elsemper@gmail.com\",\r\n    \"phone\" : \"542262626262\",\r\n    \"address\" : \"address\"\r\n}",
+							"raw": "{\r\n    \"lastName\" : \"Ramirez\",\r\n    \"firstName\" : \"Saul\",\r\n    \"email\" : \"ramirez@gmail.com\",\r\n    \"phone\" : \"542262626262\",\r\n    \"address\" : \"address\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -39,7 +39,7 @@
 					"response": []
 				},
 				{
-					"name": "http://localhost:8888/client/getAll",
+					"name": "getAll Client",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -53,6 +53,147 @@
 							"path": [
 								"client",
 								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getOne Client by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8888/client/eeb55a99-d245-4370-826d-d6e41f800e2e",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"client",
+								"eeb55a99-d245-4370-826d-d6e41f800e2e"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transaction",
+			"item": [
+				{
+					"name": "create transaction validation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"type\": \"DEPOSITa\",\r\n    \"idClient\" : \"eeb55a99-d245-4370-826d-d6e41f800e2e\",\r\n    \"idAccountOrigin\" : \"\",\r\n    \"idAccountDestination\" : \"\",\r\n    \"amount\" : -100.00\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8888/transactions/deposit",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"transactions",
+								"deposit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deposit",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"type\": \"DEPOSIT\",\r\n    \"idClient\" : \"eeb55a99-d245-4370-826d-d6e41f800e2e\",\r\n    \"idAccountOrigin\" : \"\",\r\n    \"idAccountDestination\" : \"36eb3c55-0ace-415a-8b0a-03b813360c65\",\r\n    \"amount\" : 75.00\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8888/transactions/operation",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"transactions",
+								"operation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "withdraw",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"type\": \"WITHDRAW\",\r\n    \"idClient\" : \"eeb55a99-d245-4370-826d-d6e41f800e2e\",\r\n    \"idAccountOrigin\" : \"\",\r\n    \"idAccountDestination\" : \"36eb3c55-0ace-415a-8b0a-03b813360c65\",\r\n    \"amount\" : 75.00\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8888/transactions/operation",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"transactions",
+								"operation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "transfer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"type\": \"TRANSFER\",\r\n    \"idClient\" : \"eeb55a99-d245-4370-826d-d6e41f800e2e\",\r\n    \"idAccountOrigin\" : \"36eb3c55-0ace-415a-8b0a-03b813360c65\",\r\n    \"idAccountDestination\" : \"d6d3098a-e6e0-4e27-a97c-7f5a6f8bc2a0\",\r\n    \"amount\" : 75.00\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8888/transactions/operation",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"transactions",
+								"operation"
 							]
 						}
 					},

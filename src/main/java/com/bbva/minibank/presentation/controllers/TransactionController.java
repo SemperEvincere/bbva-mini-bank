@@ -23,6 +23,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -36,33 +37,47 @@ public class TransactionController {
   private final TransactionPresentationMapper transactionMapper;
 
   @PostMapping(value = "/operation", consumes = "application/json", produces = "application/json")
-  public ResponseEntity<?> operation(@Valid @RequestBody
-      TransactionCreateRequest transactionCreateRequest, BindingResult bindingResult) {
+  @ResponseBody
+  public ResponseEntity<?> operation(@Valid @RequestBody TransactionCreateRequest transactionCreateRequest,
+      BindingResult bindingResult) {
+    ResponseEntity<?> errorResponse = getErrorResponseResponseEntity(bindingResult);
+    if (errorResponse != null) {
+      return errorResponse;
+    }
+
+    Client clientSaved = clientFindByUseCase.findById(UUID.fromString(transactionCreateRequest.getIdClient()));
+    Transaction transaction = transactionCreateUseCase.createTransaction(transactionCreateRequest);
+
+    switch (TransactionTypeEnum.valueOf(transactionCreateRequest.getType())) {
+      case DEPOSIT -> {
+        Transaction deposit = transactionBalanceUseCase.deposit(transaction, clientSaved);
+        TransactionDepositResponse depositResponse = transactionMapper.toDepositResponse(deposit, clientSaved);
+        return ResponseEntity.ok(depositResponse);
+      }
+      case WITHDRAW -> {
+        Transaction withdraw = transactionBalanceUseCase.withdraw(transaction, clientSaved);
+        TransactionWithdrawalResponse withdrawalResponse = transactionMapper.toWithdrawalResponse(withdraw, clientSaved);
+        return ResponseEntity.ok(withdrawalResponse);
+      }
+      case TRANSFER -> {
+        Transaction transfer = transactionBalanceUseCase.transfer(transaction, clientSaved);
+        TransactionTransferResponse transferResponse = transactionMapper.toTransferResponse(transfer, clientSaved);
+        return ResponseEntity.ok(transferResponse);
+      }
+      default -> {
+        return ResponseEntity.badRequest().body("Tipo de transacción no válido");
+      }
+    }
+  }
+
+
+  private static ResponseEntity<ErrorResponse> getErrorResponseResponseEntity(BindingResult bindingResult) {
     if (bindingResult.hasErrors() && bindingResult.hasFieldErrors()) {
       List<String> errors = bindingResult.getFieldErrors().stream().map(FieldError::getDefaultMessage).collect(Collectors.toList());
 
       ErrorResponse errorResponse = new ErrorResponse("Error de validación", errors);
       return ResponseEntity.badRequest().body(errorResponse);
     }
-    Client clientSaved = clientFindByUseCase.findById(UUID.fromString(transactionCreateRequest.getIdClient()));
-    Transaction transaction = transactionCreateUseCase.createTransaction(transactionCreateRequest);
-    switch (TransactionTypeEnum.valueOf(transactionCreateRequest.getType())) {
-      case DEPOSIT:
-        Transaction deposit = transactionBalanceUseCase.deposit(transaction, clientSaved);
-        TransactionDepositResponse response = transactionMapper.toDepositResponse(deposit, clientSaved);
-        return ResponseEntity.ok(response);
-      case WITHDRAW:
-        Transaction withdraw = transactionBalanceUseCase.withdraw(transaction, clientSaved);
-        TransactionWithdrawalResponse responseWithdraw = transactionMapper.toWithdrawalResponse(withdraw, clientSaved);
-        return ResponseEntity.ok(responseWithdraw);
-      case TRANSFER:
-        Transaction transfer = transactionBalanceUseCase.transfer(transaction, clientSaved);
-        TransactionTransferResponse responseTransfer = transactionMapper.toTransferResponse(transfer, clientSaved);
-
-        return ResponseEntity.ok(responseTransfer);
-      default:
-        return ResponseEntity.badRequest().body("Tipo de transacción no válido");
-
-    }
+    return null;
   }
 }
