@@ -1,8 +1,13 @@
 package com.bbva.minibank.infrastructure.mappers;
 
 import com.bbva.minibank.domain.models.Account;
+import com.bbva.minibank.domain.models.Transaction;
 import com.bbva.minibank.infrastructure.entities.AccountEntity;
+import com.bbva.minibank.infrastructure.entities.TransactionEntity;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -18,21 +23,28 @@ public class AccountEntityMapper {
         .balance(accountEntity.getBalance())
         .currency(accountEntity.getCurrency())
         .holders(accountEntity.getHolders())
-        .transactions(accountEntity.getTransactions().stream()
+        .transactions(Optional.ofNullable(accountEntity.getTransactions())
+            .orElse(Collections.emptyList())
+            .stream()
             .map(transactionMapper::toDomain)
             .toList())
         .build();
   }
 
   public AccountEntity domainToEntity(Account account) {
-    return AccountEntity.builder()
+    AccountEntity.AccountEntityBuilder builder = AccountEntity.builder()
         .accountNumber(account.getAccountNumber())
         .balance(account.getBalance())
         .currency(account.getCurrency())
-        .holders(account.getHolders())
-        .transactions(account.getTransactions().stream()
-            .map(transactionMapper::toEntity)
-            .toList())
-        .build();
+        .holders(account.getHolders());
+
+    List<Transaction> transactionEntities = account.getTransactions();
+    if (transactionEntities != null && !transactionEntities.isEmpty()) {
+      builder.transactions(transactionEntities.stream()
+          .map(transactionMapper::toEntity)
+          .toList());
+    }
+
+    return builder.build();
   }
 }

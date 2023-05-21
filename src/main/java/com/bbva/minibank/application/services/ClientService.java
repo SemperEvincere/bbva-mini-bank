@@ -26,6 +26,10 @@ public class ClientService implements IClientCreateUseCase, IClientSaveUseCase, 
 
   @Override
   public Client create(ClientCreateRequest request) {
+    String email = request.getEmail();
+    if (clientRepository.existsByEmailAndLastName(email, request.getLastName())) {
+      throw new RuntimeException("This client already exists");
+    }
     return clientMapper.requestToDomain(request);
   }
 

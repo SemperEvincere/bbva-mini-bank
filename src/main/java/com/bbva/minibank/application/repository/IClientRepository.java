@@ -12,4 +12,9 @@ public interface IClientRepository {
   List<Client> getAll();
 
   Client findById(UUID id);
+
+  boolean existsByEmail(String email);
+
+  boolean existsByEmailAndLastName(String email,
+      String lastName);
 }

@@ -64,4 +64,15 @@ public class ClientRepositoryImpl implements IClientRepository  {
     Optional<ClientEntity> optionalClient = clientSpringRepository.findById(id);
     return optionalClient.map(clientEntityMapper::entityToDomain).orElse(null);
   }
+
+  @Override
+  public boolean existsByEmail(String email) {
+    return clientSpringRepository.existsByEmail(email);
+  }
+
+  @Override
+  public boolean existsByEmailAndLastName(String email,
+      String lastName) {
+    return clientSpringRepository.existsByEmailAndLastName(email, lastName);
+  }
 }
