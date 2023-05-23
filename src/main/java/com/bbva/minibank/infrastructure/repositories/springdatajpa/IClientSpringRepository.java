@@ -10,6 +10,7 @@ public interface IClientSpringRepository extends JpaRepository<ClientEntity, UUI
 
   boolean existsByEmail(String email);
 
-  boolean existsByEmailAndLastName(String email,
-      String lastName);
+  boolean existsByEmailAndLastNameAndFirstName(String email,
+      String lastName,
+      String firstName);
 }

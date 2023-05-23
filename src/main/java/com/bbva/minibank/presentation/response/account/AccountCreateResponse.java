@@ -9,13 +9,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Builder
-@JsonInclude
 @Getter
 @Setter
-public class AccountResponse {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class AccountCreateResponse {
 
-  private UUID id;
-  private BigDecimal balance;
+  private UUID accountId;
+  private UUID holderId;
+  private UUID secondHolderId;
   private CurrencyEnum currency;
+  private BigDecimal balance;
+
 
 }

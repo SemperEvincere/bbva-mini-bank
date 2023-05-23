@@ -8,35 +8,31 @@ import com.bbva.minibank.infrastructure.repositories.springdatajpa.IAccountSprin
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@RequiredArgsConstructor
 public class AccountRepositoryImpl implements IAccountRepository {
 
-  @Autowired
-  private IAccountSpringRepository accountSpringRepository;
-  @Autowired
-  private AccountEntityMapper accountEntityMapper;
+  private final IAccountSpringRepository accountSpringRepository;
+  private final AccountEntityMapper accountEntityMapper;
 
   @Override
   public Account findByAccountNumber(UUID accountNumber) {
     Optional<AccountEntity> accountEntity = accountSpringRepository.findById(accountNumber);
-    return accountEntity.map(entity -> accountEntityMapper.entityToDomain(entity)).orElse(null);
+    return accountEntityMapper.entityToDomain(accountEntity.orElse(null));
   }
 
   @Override
   public void saveAll(List<Account> accountsDefault) {
-    List<AccountEntity> accountEntities = accountsDefault
-        .stream()
-        .map(account -> accountEntityMapper.domainToEntity(account))
-        .toList();
+    List<AccountEntity> accountEntities = accountsDefault.stream().map(accountEntityMapper::domainToEntity).toList();
     accountSpringRepository.saveAll(accountEntities);
   }
 
   @Override
-  public Account save(Account accountUpdate) {
-    AccountEntity accountEntity = accountEntityMapper.domainToEntity(accountUpdate);
+  public Account save(Account newAccount) {
+    AccountEntity accountEntity = accountEntityMapper.domainToEntity(newAccount);
     AccountEntity accountSaved = accountSpringRepository.save(accountEntity);
     return accountEntityMapper.entityToDomain(accountSaved);
   }

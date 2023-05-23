@@ -2,13 +2,13 @@ package com.bbva.minibank.application.usecases.account;
 
 import com.bbva.minibank.domain.models.Account;
 import com.bbva.minibank.domain.models.Client;
-import java.util.List;
-import java.util.UUID;
+import com.bbva.minibank.domain.models.enums.CurrencyEnum;
 
 public interface IAccountCreateUseCase {
 
-  List<Account> create();
+  Account create(CurrencyEnum currency,
+      Client holder,
+      Client secondHolder);
 
 
-  void saveAll(List<Account> accountsDefault);
 }

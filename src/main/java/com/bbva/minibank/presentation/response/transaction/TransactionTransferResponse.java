@@ -9,11 +9,11 @@ import lombok.Setter;
 @Builder
 public class TransactionTransferResponse {
 
-    private String id;
-    private String type;
-    private String amount;
-    private String accountNumberFrom;
-    private String accountNumberTo;
-    private String clientFullName;
-    private String createdAt;
+  private String id;
+  private String type;
+  private String amount;
+  private String accountNumberFrom;
+  private String accountNumberTo;
+  private String clientFullName;
+  private String createdAt;
 }

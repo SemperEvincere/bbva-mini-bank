@@ -16,9 +16,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Client {
 
-
-  @Builder.Default
-  private UUID id = UUID.randomUUID();
+  private UUID id;
   private ClientTypeEnum type;
   private String lastName;
   private String firstName;
@@ -27,4 +25,7 @@ public class Client {
   private String address;
   private List<UUID> accounts;
 
+  public void addAccount(UUID newAccount) {
+    this.accounts.add(newAccount);
+  }
 }

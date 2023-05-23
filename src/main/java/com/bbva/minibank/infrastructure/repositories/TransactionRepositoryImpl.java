@@ -14,6 +14,7 @@ public class TransactionRepositoryImpl implements ITransactionRepository {
 
   private final ITransactionSpringRepository transactionSpringRepository;
   private final TransactionEntityMapper transactionEntityMapper;
+
   @Override
   public Transaction save(Transaction transaction) {
     TransactionEntity transactionEntity = transactionSpringRepository.save(transactionEntityMapper.ToEntity(transaction));

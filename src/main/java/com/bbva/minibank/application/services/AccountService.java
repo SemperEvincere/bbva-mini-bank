@@ -5,46 +5,46 @@ import com.bbva.minibank.application.usecases.account.IAccountCreateUseCase;
 import com.bbva.minibank.application.usecases.account.IAccountFindUseCase;
 import com.bbva.minibank.application.usecases.account.IAccountOperationsUseCase;
 import com.bbva.minibank.application.usecases.account.IAccountUpdateUseCase;
+import com.bbva.minibank.application.usecases.client.IClientUpdateUseCase;
 import com.bbva.minibank.domain.models.Account;
+import com.bbva.minibank.domain.models.Client;
+import com.bbva.minibank.domain.models.enums.ClientTypeEnum;
 import com.bbva.minibank.domain.models.enums.CurrencyEnum;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AccountService
-    implements
-    IAccountCreateUseCase,
-    IAccountFindUseCase,
-    IAccountUpdateUseCase,
-    IAccountOperationsUseCase {
+@RequiredArgsConstructor
+public class AccountService implements IAccountCreateUseCase, IAccountFindUseCase, IAccountUpdateUseCase, IAccountOperationsUseCase {
 
-  @Autowired
-  private IAccountRepository accountRepository;
+  private final IAccountRepository accountRepository;
+  private final IClientUpdateUseCase clientUpdateUseCase;
 
   @Override
-  public List<Account> create() {
-    List<Account> accountsDefault = new ArrayList<>();
-    Account accountARS = new Account();
-    accountARS.setCurrency(CurrencyEnum.valueOf("ARS"));
-    accountARS.setBalance(BigDecimal.valueOf(0.0));
-    accountARS.setHolders(new ArrayList<UUID>());
-    Account accountUSD = new Account();
-    accountUSD.setCurrency(CurrencyEnum.valueOf("USD"));
-    accountUSD.setBalance(BigDecimal.valueOf(0.0));
-    accountUSD.setHolders(new ArrayList<UUID>());
-    accountsDefault.add(accountARS);
-    accountsDefault.add(accountUSD);
+  public Account create(CurrencyEnum currency,
+      Client holder,
+      Client secondHolder) {
+    Account.AccountBuilder accountBuilder = Account.builder().accountNumber(UUID.randomUUID()).currency(currency).balance(BigDecimal.ZERO).transactions(new ArrayList<>()).clientHolder(holder.getId());
 
-    return accountsDefault;
-  }
-
-  @Override
-  public void saveAll(List<Account> accountsDefault) {
-    accountRepository.saveAll(accountsDefault);
+    if (secondHolder != null) {
+      accountBuilder.clientSecondHolder(secondHolder.getId());
+    }
+    Account account = accountBuilder.build();
+    List<UUID> mutableList = new ArrayList<>(holder.getAccounts());
+    mutableList.add(account.getAccountNumber());
+    holder.setAccounts(mutableList);
+//    holder.addAccount(account.getAccountNumber());
+    if (secondHolder != null) {
+      secondHolder.getAccounts().add(account.getAccountNumber());
+    }
+    holder.setType(ClientTypeEnum.HOLDER);
+    accountRepository.save(account);
+    clientUpdateUseCase.update(holder);
+    return account;
   }
 
   @Override

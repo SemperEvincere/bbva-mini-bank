@@ -12,13 +12,8 @@ public class TransactionPresentationMapper {
 
   public TransactionDepositResponse toDepositResponse(Transaction transaction,
       Client clientSaved) {
-    return TransactionDepositResponse.builder()
-        .id(transaction.getId().toString())
-        .type(transaction.getType().toString())
-        .amount(transaction.getAmount().toString())
-        .accountNumber(transaction.getAccountNumberFrom().toString())
-        .clientFullName(String.format("%s, %s", clientSaved.getLastName(), clientSaved.getFirstName()))
-        .createdAt(transaction.getCreatedAt().toString())
+    return TransactionDepositResponse.builder().id(transaction.getId().toString()).type(transaction.getType().toString()).amount(transaction.getAmount().toString()).accountNumber(transaction.getAccountNumberFrom().toString())
+        .clientFullName(String.format("%s, %s", clientSaved.getLastName(), clientSaved.getFirstName())).createdAt(transaction.getCreatedAt().toString())
 
         .build();
 
@@ -26,26 +21,13 @@ public class TransactionPresentationMapper {
 
   public TransactionWithdrawalResponse toWithdrawalResponse(Transaction withdraw,
       Client clientSaved) {
-    return TransactionWithdrawalResponse.builder()
-        .id(withdraw.getId().toString())
-        .type(withdraw.getType().toString())
-        .amountExtracted(withdraw.getAmount().toString())
-        .accountNumberFrom(withdraw.getAccountNumberFrom().toString())
-        .clientFullName(String.format("%s, %s", clientSaved.getLastName(), clientSaved.getFirstName()))
-        .createdAt(withdraw.getCreatedAt().toString())
-        .build();
+    return TransactionWithdrawalResponse.builder().id(withdraw.getId().toString()).type(withdraw.getType().toString()).amountExtracted(withdraw.getAmount().toString()).accountNumberFrom(withdraw.getAccountNumberFrom().toString())
+        .clientFullName(String.format("%s, %s", clientSaved.getLastName(), clientSaved.getFirstName())).createdAt(withdraw.getCreatedAt().toString()).build();
   }
 
   public TransactionTransferResponse toTransferResponse(Transaction transfer,
       Client clientSaved) {
-    return TransactionTransferResponse.builder()
-        .id(transfer.getId().toString())
-        .type(transfer.getType().toString())
-        .amount(transfer.getAmount().toString())
-        .accountNumberFrom(transfer.getAccountNumberFrom().toString())
-        .accountNumberTo(transfer.getAccountNumberTo().toString())
-        .clientFullName(String.format("%s, %s", clientSaved.getLastName(), clientSaved.getFirstName()))
-        .createdAt(transfer.getCreatedAt().toString())
-        .build();
+    return TransactionTransferResponse.builder().id(transfer.getId().toString()).type(transfer.getType().toString()).amount(transfer.getAmount().toString()).accountNumberFrom(transfer.getAccountNumberFrom().toString()).accountNumberTo(transfer.getAccountNumberTo().toString())
+        .clientFullName(String.format("%s, %s", clientSaved.getLastName(), clientSaved.getFirstName())).createdAt(transfer.getCreatedAt().toString()).build();
   }
 }

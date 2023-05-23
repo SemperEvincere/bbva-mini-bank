@@ -1,8 +1,6 @@
 package com.bbva.minibank.presentation.request.transaction;
 
-import com.bbva.minibank.domain.models.enums.TransactionTypeEnum;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
@@ -22,17 +20,14 @@ public class TransactionCreateRequest {
   private String type;
 
   @NotNull(message = "El campo idClient no puede ser null")
-  @Pattern(regexp = "^\\p{XDigit}{8}-\\p{XDigit}{4}-\\p{XDigit}{4}-\\p{XDigit}{4}-\\p{XDigit}{12}$",
-      message = "El campo idClient debe tener el formato de un UUID válido")
+  @Pattern(regexp = "^\\p{XDigit}{8}-\\p{XDigit}{4}-\\p{XDigit}{4}-\\p{XDigit}{4}-\\p{XDigit}{12}$", message = "El campo idClient debe tener el formato de un UUID válido")
   private String idClient;
 
-  @Pattern(regexp = "^\\p{XDigit}{8}-\\p{XDigit}{4}-\\p{XDigit}{4}-\\p{XDigit}{4}-\\p{XDigit}{12}$",
-      message = "El campo idAccountDestination debe tener el formato de un UUID válido")
+  @Pattern(regexp = "^\\p{XDigit}{8}-\\p{XDigit}{4}-\\p{XDigit}{4}-\\p{XDigit}{4}-\\p{XDigit}{12}$", message = "El campo idAccountDestination debe tener el formato de un UUID válido")
   @NotNull(message = "El campo idAccountDestination no puede ser null")
   private String idAccountOrigin;
 
-  @Pattern(regexp = "^(?:\\p{XDigit}{8}-\\p{XDigit}{4}-\\p{XDigit}{4}-\\p{XDigit}{4}-\\p{XDigit}{12})?$",
-      message = "El campo idAccountOrigin debe tener el formato de un UUID válido o ser vacío")
+  @Pattern(regexp = "^(?:\\p{XDigit}{8}-\\p{XDigit}{4}-\\p{XDigit}{4}-\\p{XDigit}{4}-\\p{XDigit}{12})?$", message = "El campo idAccountOrigin debe tener el formato de un UUID válido o ser vacío")
   private String idAccountDestination;
 
   @NotNull(message = "El campo amount no puede ser null")

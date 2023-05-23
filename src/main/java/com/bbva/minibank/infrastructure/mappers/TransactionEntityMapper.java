@@ -12,26 +12,19 @@ public class TransactionEntityMapper {
   }
 
   public Transaction toDomain(TransactionEntity transactionEntity) {
-    if (transactionEntity == null) return null;
-    return Transaction.builder()
-        .id(transactionEntity.getId())
-        .type(transactionEntity.getType())
-        .amount(transactionEntity.getAmount())
-        .accountNumberFrom(transactionEntity.getAccountNumberFrom())
-        .accountNumberTo(transactionEntity.getAccountNumberTo())
-        .createdAt(transactionEntity.getTimestamp())
+    if (transactionEntity == null) {
+      return null;
+    }
+    return Transaction.builder().id(transactionEntity.getId()).type(transactionEntity.getType()).amount(transactionEntity.getAmount()).accountNumberFrom(transactionEntity.getAccountNumberFrom()).accountNumberTo(transactionEntity.getAccountNumberTo()).createdAt(transactionEntity.getTimestamp())
 
         .build();
   }
 
   public TransactionEntity ToEntity(Transaction transaction) {
-    if (transaction == null) return null;
-    return TransactionEntity.builder()
-        .type(transaction.getType())
-        .amount(transaction.getAmount())
-        .accountNumberFrom(transaction.getAccountNumberFrom())
-        .accountNumberTo(transaction.getAccountNumberTo())
-        .timestamp(transaction.getCreatedAt())
+    if (transaction == null) {
+      return null;
+    }
+    return TransactionEntity.builder().type(transaction.getType()).amount(transaction.getAmount()).accountNumberFrom(transaction.getAccountNumberFrom()).accountNumberTo(transaction.getAccountNumberTo()).timestamp(transaction.getCreatedAt())
 
         .build();
   }

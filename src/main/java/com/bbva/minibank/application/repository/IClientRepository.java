@@ -2,8 +2,8 @@ package com.bbva.minibank.application.repository;
 
 import com.bbva.minibank.domain.models.Client;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
-import org.springframework.stereotype.Repository;
 
 public interface IClientRepository {
 
@@ -11,10 +11,13 @@ public interface IClientRepository {
 
   List<Client> getAll();
 
-  Client findById(UUID id);
+  Optional<Client> findById(UUID id);
 
   boolean existsByEmail(String email);
 
-  boolean existsByEmailAndLastName(String email,
-      String lastName);
+  boolean existsByEmailAndLastNameAndFirstName(String email,
+      String lastName,
+      String firstName);
+
+  void update(Client client);
 }

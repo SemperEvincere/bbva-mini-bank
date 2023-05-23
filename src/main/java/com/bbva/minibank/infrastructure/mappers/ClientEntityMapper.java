@@ -3,41 +3,45 @@ package com.bbva.minibank.infrastructure.mappers;
 import com.bbva.minibank.domain.models.Client;
 import com.bbva.minibank.infrastructure.entities.AccountEntity;
 import com.bbva.minibank.infrastructure.entities.ClientEntity;
+import com.bbva.minibank.infrastructure.repositories.AccountRepositoryImpl;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component()
+@RequiredArgsConstructor
 public class ClientEntityMapper {
 
+  private final AccountEntityMapper accountEntityMapper;
+  private final AccountRepositoryImpl accountFindUseCase;
 
   public ClientEntity domainToEntity(Client client) {
-    return ClientEntity.builder()
-        .id(client.getId())
-        .firstName(client.getFirstName())
-        .lastName(client.getLastName())
-        .email(client.getEmail())
-        .phone(client.getPhone())
-        .address(client.getAddress())
-        .accounts(new ArrayList<>())
-        .build();
+    return ClientEntity.builder().id(client.getId()).firstName(client.getFirstName()).lastName(client.getLastName()).email(client.getEmail()).phone(client.getPhone()).address(client.getAddress())
+        .accounts(client.getAccounts().stream().map(accountFindUseCase::findByAccountNumber).map(accountEntityMapper::domainToEntity).toList()).build();
   }
 
 
-
   public Client entityToDomain(ClientEntity clientEntity) {
-    Client client = new Client();
-    client.setId(clientEntity.getId());
-    client.setFirstName(clientEntity.getFirstName());
-    client.setLastName(clientEntity.getLastName());
-    client.setEmail(clientEntity.getEmail());
-    client.setPhone(clientEntity.getPhone());
-    client.setAddress(clientEntity.getAddress());
-    client.setAccounts(new ArrayList<>());
-    for (AccountEntity accountEntity : clientEntity.getAccounts()) {
-      client.getAccounts().add(accountEntity.getAccountNumber());
+
+    Client.ClientBuilder clientBuilder = Client.builder().id(clientEntity.getId()).firstName(clientEntity.getFirstName()).lastName(clientEntity.getLastName()).email(clientEntity.getEmail()).phone(clientEntity.getPhone()).address(clientEntity.getAddress()).accounts(new ArrayList<UUID>());
+
+    List<AccountEntity> accountEntities = clientEntity.getAccounts();
+    List<UUID> accountList = new ArrayList<>(); // Creamos una nueva lista mutable
+
+    if (accountEntities != null && !accountEntities.isEmpty()) {
+      for (AccountEntity accountEntity : accountEntities) {
+        if (accountEntity != null) {
+          accountList.add(accountEntity.getAccountNumber()); // Agregamos cada cuenta a la lista mutable
+        }
+      }
     }
 
-    return client;
+    clientBuilder.accounts(accountList); // Asignamos la lista mutable al builder
+
+    return clientBuilder.build();
+
   }
 
 

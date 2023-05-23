@@ -1,6 +1,7 @@
 package com.bbva.minibank.domain.models;
 
 import com.bbva.minibank.domain.models.enums.CurrencyEnum;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotNull;
@@ -13,11 +14,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.validator.constraints.UniqueElements;
+
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class Account {
 
@@ -28,10 +30,11 @@ public class Account {
   @Enumerated(EnumType.STRING)
   @NotNull
   private CurrencyEnum currency;
-  private List<UUID> holders;
+  @NotNull
+  private UUID clientHolder;
+  @Nullable
+  private UUID clientSecondHolder;
   private List<Transaction> transactions;
 
-  public Account() {
-    setAccountNumber(UUID.randomUUID());
-  }
+
 }

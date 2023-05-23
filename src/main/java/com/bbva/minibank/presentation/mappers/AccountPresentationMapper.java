@@ -1,6 +1,7 @@
 package com.bbva.minibank.presentation.mappers;
 
 import com.bbva.minibank.domain.models.Account;
+import com.bbva.minibank.presentation.response.account.AccountCreateResponse;
 import com.bbva.minibank.presentation.response.account.AccountResponse;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,10 +19,10 @@ public class AccountPresentationMapper {
   }
 
   private AccountResponse domainToResponse(Account account) {
-    return AccountResponse.builder()
-        .id(account.getAccountNumber())
-        .balance(account.getBalance())
-        .currency(account.getCurrency().name())
-        .build();
+    return AccountResponse.builder().id(account.getAccountNumber()).balance(account.getBalance()).currency(account.getCurrency()).build();
+  }
+
+  public AccountCreateResponse domainToCreateResponse(Account account) {
+    return AccountCreateResponse.builder().accountId(account.getAccountNumber()).holderId(account.getClientHolder()).secondHolderId(account.getClientSecondHolder()).balance(account.getBalance()).currency(account.getCurrency()).build();
   }
 }

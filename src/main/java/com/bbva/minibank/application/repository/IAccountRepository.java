@@ -10,5 +10,5 @@ public interface IAccountRepository {
 
   void saveAll(List<Account> accountsDefault);
 
-  Account save(Account accountUpdate);
+  Account save(Account newAccount);
 }
