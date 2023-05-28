@@ -29,7 +29,8 @@ public class TransactionService implements ITransactionBalanceUseCase, ITransact
   private final IAccountOperationsUseCase accountOperationsUseCase;
 
   public Transaction createTransaction(TransactionCreateRequest transactionCreateRequest) {
-    return Transaction.builder().createdAt(LocalDateTime.now()).type(TransactionTypeEnum.valueOf(transactionCreateRequest.getType())).accountNumberFrom(transactionCreateRequest.getIdAccountOrigin().isBlank() ? null : UUID.fromString(transactionCreateRequest.getIdAccountOrigin()))
+    return Transaction.builder()
+        .createdAt(LocalDateTime.now()).type(TransactionTypeEnum.valueOf(transactionCreateRequest.getType())).accountNumberFrom(transactionCreateRequest.getIdAccountOrigin().isBlank() ? null : UUID.fromString(transactionCreateRequest.getIdAccountOrigin()))
         .accountNumberTo(transactionCreateRequest.getIdAccountDestination().isBlank() ? null : UUID.fromString(transactionCreateRequest.getIdAccountDestination())).amount(transactionCreateRequest.getAmount()).build();
   }
 

@@ -11,6 +11,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -43,7 +44,7 @@ public class TransactionEntity {
   @PositiveOrZero
   private BigDecimal amount;
 
-  @NotBlank
+  @NotNull
   private UUID accountNumberFrom;
 
   @Nullable

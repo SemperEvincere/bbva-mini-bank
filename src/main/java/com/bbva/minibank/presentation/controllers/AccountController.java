@@ -1,6 +1,7 @@
 package com.bbva.minibank.presentation.controllers;
 
 import com.bbva.minibank.application.usecases.account.IAccountCreateUseCase;
+import com.bbva.minibank.application.usecases.account.IAccountFindUseCase;
 import com.bbva.minibank.application.usecases.client.IClientFindByUseCase;
 import com.bbva.minibank.application.usecases.client.IClientUpdateUseCase;
 import com.bbva.minibank.domain.models.Account;
@@ -8,7 +9,11 @@ import com.bbva.minibank.domain.models.Client;
 import com.bbva.minibank.presentation.mappers.AccountPresentationMapper;
 import com.bbva.minibank.presentation.request.account.AccountCreateRequest;
 import com.bbva.minibank.presentation.response.account.AccountCreateResponse;
+
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +30,7 @@ public class AccountController {
   private final AccountPresentationMapper accountMapper;
   private final IClientFindByUseCase clientFindByUseCase;
   private final IClientUpdateUseCase clientUpdateUseCase;
+  private final IAccountFindUseCase accountFindByUseCase;
 
   @PostMapping(value = "/create", consumes = "application/json", produces = "application/json")
   public ResponseEntity<?> create(@RequestBody AccountCreateRequest accountCreateRequest) {
@@ -41,6 +47,16 @@ public class AccountController {
       if (secondHolder.isEmpty()) {
         return ResponseEntity.badRequest().body("Second holder not found");
       }
+    }
+    Optional<Account> accountOptional = client.get()
+            .getAccounts()
+            .stream()
+            .map(accountFindByUseCase::findByAccountNumber)
+            .filter(account -> account.getCurrency().equals(accountCreateRequest.getCurrency()))
+            .findFirst();
+
+    if (accountOptional.isPresent()) {
+      return ResponseEntity.badRequest().body("Account already exists");
     }
 
     Account account = accountCreateUseCase.create(accountCreateRequest.getCurrency(), client.get(), secondHolder.orElse(null));
