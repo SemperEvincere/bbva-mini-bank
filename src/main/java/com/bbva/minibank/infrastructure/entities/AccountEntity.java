@@ -1,20 +1,12 @@
 package com.bbva.minibank.infrastructure.entities;
 
 import com.bbva.minibank.domain.models.enums.CurrencyEnum;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,8 +35,11 @@ public class AccountEntity {
   @Column(nullable = false)
   private CurrencyEnum currency;
 
-  @ElementCollection(fetch = FetchType.EAGER)
-  private Map<String, UUID> holders;
+  @OneToOne(fetch = FetchType.LAZY)
+  private ClientEntity owner;
+
+  @ManyToMany(mappedBy = "accounts", fetch = FetchType.LAZY)
+  private List<ClientEntity> coHolders;
 
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<TransactionEntity> transactions;

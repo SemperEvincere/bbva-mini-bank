@@ -5,6 +5,7 @@ import com.bbva.minibank.application.usecases.client.IClientCreateUseCase;
 import com.bbva.minibank.application.usecases.client.IClientFindByUseCase;
 import com.bbva.minibank.application.usecases.client.IClientSaveUseCase;
 import com.bbva.minibank.application.usecases.client.IClientUpdateUseCase;
+import com.bbva.minibank.domain.models.Account;
 import com.bbva.minibank.domain.models.Client;
 import com.bbva.minibank.domain.models.Transaction;
 import com.bbva.minibank.presentation.mappers.ClientPresentationMapper;
@@ -54,7 +55,12 @@ public class ClientService implements IClientUpdateUseCase, IClientCreateUseCase
   }
 
   @Override
-  public void update(Client client) {
-    clientRepository.update(client);
+  public Client update(Client client) {
+    return clientRepository.update(client);
+  }
+
+  @Override
+  public void addAccount(Client client, Account account) {
+    clientRepository.addAccount(client, account);
   }
 }

@@ -28,22 +28,24 @@ public class AccountService implements IAccountCreateUseCase, IAccountFindUseCas
   public Account create(CurrencyEnum currency,
       Client holder,
       Client secondHolder) {
-    Account.AccountBuilder accountBuilder = Account.builder().accountNumber(UUID.randomUUID()).currency(currency).balance(BigDecimal.ZERO).transactions(new ArrayList<>()).clientHolder(holder.getId());
+    Account.AccountBuilder accountBuilder = Account.builder()
+            .accountNumber(UUID.randomUUID())
+            .currency(currency)
+            .balance(BigDecimal.ZERO)
+            .transactions(new ArrayList<>())
+            .clientHolder(holder.getId());
 
     if (secondHolder != null) {
-      accountBuilder.clientSecondHolder(secondHolder.getId());
+        accountBuilder.clientSecondHolder(secondHolder.getId());
     }
+
     Account account = accountBuilder.build();
-    List<UUID> mutableList = new ArrayList<>(holder.getAccounts());
-    mutableList.add(account.getAccountNumber());
-    holder.setAccounts(mutableList);
-//    holder.addAccount(account.getAccountNumber());
-    if (secondHolder != null) {
-      secondHolder.getAccounts().add(account.getAccountNumber());
-    }
-    holder.setType(ClientTypeEnum.HOLDER);
     accountRepository.save(account);
-    clientUpdateUseCase.update(holder);
+    clientUpdateUseCase.addAccount(holder, account);
+    if (secondHolder != null) {
+        clientUpdateUseCase.addAccount(secondHolder, account);
+    }
+
     return account;
   }
 

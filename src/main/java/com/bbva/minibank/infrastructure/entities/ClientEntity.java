@@ -2,15 +2,10 @@ package com.bbva.minibank.infrastructure.entities;
 
 import com.bbva.minibank.domain.models.enums.ClientTypeEnum;
 import jakarta.annotation.Nullable;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,9 +41,12 @@ public class ClientEntity {
   @Nullable
   private String address;
 
-  private ClientTypeEnum type;
-
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  private List<AccountEntity> accounts;
+  @ManyToMany(fetch = FetchType.LAZY)
+  @JoinTable(
+        name = "client_account",
+        joinColumns = @JoinColumn(name = "client_id"),
+        inverseJoinColumns = @JoinColumn(name = "account_number")
+  )
+  private Set<AccountEntity> accounts;
 
 }

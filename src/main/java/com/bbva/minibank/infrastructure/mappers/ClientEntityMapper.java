@@ -4,9 +4,10 @@ import com.bbva.minibank.domain.models.Client;
 import com.bbva.minibank.infrastructure.entities.AccountEntity;
 import com.bbva.minibank.infrastructure.entities.ClientEntity;
 import com.bbva.minibank.infrastructure.repositories.AccountRepositoryImpl;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -19,15 +20,22 @@ public class ClientEntityMapper {
 
   public ClientEntity domainToEntity(Client client) {
     return ClientEntity.builder().id(client.getId()).firstName(client.getFirstName()).lastName(client.getLastName()).email(client.getEmail()).phone(client.getPhone()).address(client.getAddress())
-        .accounts(client.getAccounts().stream().map(accountFindUseCase::findByAccountNumber).map(accountEntityMapper::domainToEntity).toList()).build();
+        .accounts(client.getAccounts().stream().map(accountFindUseCase::findByAccountNumber).map(accountEntityMapper::domainToEntity).collect(Collectors.toSet())).build();
   }
 
 
   public Client entityToDomain(ClientEntity clientEntity) {
 
-    Client.ClientBuilder clientBuilder = Client.builder().id(clientEntity.getId()).firstName(clientEntity.getFirstName()).lastName(clientEntity.getLastName()).email(clientEntity.getEmail()).phone(clientEntity.getPhone()).address(clientEntity.getAddress()).accounts(new ArrayList<UUID>());
+    Client.ClientBuilder clientBuilder = Client.builder()
+            .id(clientEntity.getId())
+            .firstName(clientEntity.getFirstName())
+            .lastName(clientEntity.getLastName())
+            .email(clientEntity.getEmail())
+            .phone(clientEntity.getPhone())
+            .address(clientEntity.getAddress())
+            .accounts(new ArrayList<UUID>());
 
-    List<AccountEntity> accountEntities = clientEntity.getAccounts();
+    Set<AccountEntity> accountEntities = new HashSet<>(clientEntity.getAccounts());
     List<UUID> accountList = new ArrayList<>(); // Creamos una nueva lista mutable
 
     if (accountEntities != null && !accountEntities.isEmpty()) {

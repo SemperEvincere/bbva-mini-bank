@@ -34,6 +34,7 @@ public class Account {
   private UUID clientHolder;
   @Nullable
   private UUID clientSecondHolder;
+
   private List<Transaction> transactions;
 
 

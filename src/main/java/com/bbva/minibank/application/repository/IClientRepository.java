@@ -1,6 +1,9 @@
 package com.bbva.minibank.application.repository;
 
+import com.bbva.minibank.domain.models.Account;
 import com.bbva.minibank.domain.models.Client;
+import com.bbva.minibank.infrastructure.entities.ClientEntity;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -19,5 +22,7 @@ public interface IClientRepository {
       String lastName,
       String firstName);
 
-  void update(Client client);
+  Client update(Client client);
+
+  void addAccount(Client client, Account account);
 }

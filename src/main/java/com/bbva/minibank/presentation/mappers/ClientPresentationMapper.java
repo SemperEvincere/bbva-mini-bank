@@ -14,16 +14,41 @@ import org.springframework.stereotype.Component;
 public class ClientPresentationMapper {
 
   public ClientResponse domainToResponse(Client client) {
-    return ClientResponse.builder().id(client.getId()).firstName(client.getFirstName()).lastName(client.getLastName()).email(client.getEmail()).phone(client.getPhone()).address(client.getAddress()).build();
+    return ClientResponse
+            .builder()
+            .id(client.getId())
+            .firstName(client.getFirstName())
+            .lastName(client.getLastName())
+            .email(client.getEmail())
+            .phone(client.getPhone())
+            .address(client.getAddress())
+            .build();
   }
 
   public Client requestToDomain(ClientCreateRequest request) {
-    return Client.builder().id(UUID.randomUUID()).firstName(request.getFirstName()).lastName(request.getLastName()).email(request.getEmail()).phone(request.getPhone()).address(request.getAddress()).accounts(new ArrayList<UUID>()).build();
+    return Client.builder()
+            .id(UUID.randomUUID())
+            .firstName(request.getFirstName())
+            .lastName(request.getLastName())
+            .email(request.getEmail())
+            .phone(request.getPhone())
+            .address(request.getAddress())
+            .accounts(new ArrayList<UUID>())
+            .build();
   }
 
   public ClientAllDataResponse domainToAllDataResponse(Client client,
       List<AccountResponse> accountResponse) {
 
-    return ClientAllDataResponse.builder().id(client.getId()).firstName(client.getFirstName()).lastName(client.getLastName()).email(client.getEmail()).phone(client.getPhone()).address(client.getAddress()).accounts(accountResponse).build();
+    return ClientAllDataResponse
+            .builder()
+            .id(client.getId())
+            .firstName(client.getFirstName())
+            .lastName(client.getLastName())
+            .email(client.getEmail())
+            .phone(client.getPhone())
+            .address(client.getAddress())
+            .accounts(accountResponse)
+            .build();
   }
 }

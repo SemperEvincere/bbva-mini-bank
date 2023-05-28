@@ -1,6 +1,7 @@
 package com.bbva.minibank.infrastructure.repositories;
 
 import com.bbva.minibank.application.repository.IClientRepository;
+import com.bbva.minibank.domain.models.Account;
 import com.bbva.minibank.domain.models.Client;
 import com.bbva.minibank.infrastructure.entities.AccountEntity;
 import com.bbva.minibank.infrastructure.entities.ClientEntity;
@@ -8,6 +9,8 @@ import com.bbva.minibank.infrastructure.mappers.AccountEntityMapper;
 import com.bbva.minibank.infrastructure.mappers.ClientEntityMapper;
 import com.bbva.minibank.infrastructure.repositories.springdatajpa.IClientSpringRepository;
 import jakarta.transaction.Transactional;
+
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -29,7 +32,7 @@ public class ClientRepositoryImpl implements IClientRepository {
   public Client saveClient(Client client) {
     ClientEntity clientEntity = clientEntityMapper.domainToEntity(client);
     List<AccountEntity> accountEntities = client.getAccounts().stream().map(accountNumber -> accountEntityMapper.domainToEntity(accountFindUseCase.findByAccountNumber(accountNumber))).collect(Collectors.toList());
-    clientEntity.setAccounts(accountEntities);
+    clientEntity.setAccounts(new HashSet<>(accountEntities));
 
     clientSpringRepository.save(clientEntity);
 
@@ -65,12 +68,23 @@ public class ClientRepositoryImpl implements IClientRepository {
 
   @Override
   @Transactional
-  public void update(Client client) {
+  public Client update(Client client) {
+    if (client == null) {
+        throw new IllegalArgumentException("Client can not be null");
+    }
     ClientEntity clientEntity = clientEntityMapper.domainToEntity(client);
     List<AccountEntity> accountEntities = client.getAccounts().stream().map(accountNumber -> accountEntityMapper.domainToEntity(accountFindUseCase.findByAccountNumber(accountNumber))).collect(Collectors.toList());
 
-    clientEntity.setAccounts(accountEntities);
+    clientEntity.setAccounts(new HashSet<>(accountEntities));
 
+    return clientEntityMapper.entityToDomain(clientSpringRepository.save(clientEntity));
+  }
+
+  @Override
+  public void addAccount(Client client, Account account) {
+    ClientEntity clientEntity = clientEntityMapper.domainToEntity(client);
+    AccountEntity accountEntity = accountEntityMapper.domainToEntity(account);
+    clientEntity.getAccounts().add(accountEntity);
     clientSpringRepository.save(clientEntity);
   }
 }

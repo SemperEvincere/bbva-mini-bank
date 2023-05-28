@@ -78,7 +78,6 @@ public class ClientController {
   @ResponseBody
   public ClientAllDataResponse getOne(@PathVariable("id") UUID id) {
     Optional<Client> clientOptional = clientFindByUseCase.findById(id);
-    Client client1 = clientOptional.get();
     return clientOptional.map(client -> {
       List<Account> accounts = client.getAccounts().stream().map(accountFindUseCase::findByAccountNumber).toList();
       List<AccountResponse> accountsResponse = accountMapper.domainToResponseList(accounts);
