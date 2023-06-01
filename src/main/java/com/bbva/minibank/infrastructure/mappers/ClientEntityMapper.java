@@ -19,7 +19,14 @@ public class ClientEntityMapper {
   private final AccountRepositoryImpl accountFindUseCase;
 
   public ClientEntity domainToEntity(Client client) {
-    return ClientEntity.builder().id(client.getId()).firstName(client.getFirstName()).lastName(client.getLastName()).email(client.getEmail()).phone(client.getPhone()).address(client.getAddress())
+    return ClientEntity
+            .builder()
+            .id(client.getId())
+            .firstName(client.getFirstName())
+            .lastName(client.getLastName())
+            .email(client.getEmail())
+            .phone(client.getPhone())
+            .address(client.getAddress())
         .accounts(client.getAccounts().stream().map(accountFindUseCase::findByAccountNumber).map(accountEntityMapper::domainToEntity).collect(Collectors.toSet())).build();
   }
 

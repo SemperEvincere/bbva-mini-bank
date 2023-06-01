@@ -31,7 +31,7 @@ public class ClientRepositoryImpl implements IClientRepository {
   @Override
   public Client saveClient(Client client) {
     ClientEntity clientEntity = clientEntityMapper.domainToEntity(client);
-    List<AccountEntity> accountEntities = client.getAccounts().stream().map(accountNumber -> accountEntityMapper.domainToEntity(accountFindUseCase.findByAccountNumber(accountNumber))).collect(Collectors.toList());
+    List<AccountEntity> accountEntities = client.getAccounts().stream().map(accountNumber -> accountEntityMapper.domainToEntity(accountFindUseCase.findByAccountNumber(accountNumber))).toList();
     clientEntity.setAccounts(new HashSet<>(accountEntities));
 
     clientSpringRepository.save(clientEntity);
@@ -41,7 +41,11 @@ public class ClientRepositoryImpl implements IClientRepository {
 
   @Override
   public List<Client> getAll() {
-    return clientSpringRepository.findAll().stream().map(clientEntityMapper::entityToDomain).collect(Collectors.toList());
+    return clientSpringRepository
+            .findAll()
+            .stream()
+            .map(clientEntityMapper::entityToDomain)
+            .collect(Collectors.toList());
   }
 
   @Override

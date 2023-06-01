@@ -14,14 +14,12 @@ import com.bbva.minibank.presentation.response.account.AccountCreateResponse;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/account")
@@ -59,6 +57,7 @@ public class AccountController {
             .findFirst();
 
     if (accountOptional.isPresent()) {
+      // todo: debe poder crear una cuenta aunque sea cotitular de otra cuenta
       return ResponseEntity.badRequest().body("Account already exists");
     }
 
@@ -97,9 +96,7 @@ public class AccountController {
     }
 
     Account account = accountOptional.get();
-    if (account.getClientSecondHolder() != null) {
-      return ResponseEntity.badRequest().body("Account already has a second holder");
-    }
+
     secondHolder.ifPresent(value -> account.setClientSecondHolder(value.getId()));
     secondHolder.ifPresent(value -> value.getAccounts().add(account.getAccountNumber()));
     Account accountUpdate = accountUpdateUseCase.update(account);
@@ -107,4 +104,21 @@ public class AccountController {
     AccountCreateResponse accountCreateResponse = accountMapper.domainToCreateResponse(accountUpdate);
     return ResponseEntity.ok(accountCreateResponse);
   }
+
+  @GetMapping(value = "/", produces = "application/json")
+    public ResponseEntity<?> findAll() {
+        List<Account> accounts = accountFindByUseCase.findAll();
+        List<AccountCreateResponse> accountCreateResponses = accounts.stream()
+                .map(accountMapper::domainToCreateResponse)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(accountCreateResponses);
+    }
+
+    @GetMapping(value = "/{accountNumber}", produces = "application/json")
+    public ResponseEntity<?> findByAccountNumber(@PathVariable("accountNumber") String accountNumber) {
+        Account account = accountFindByUseCase.findByAccountNumber(UUID.fromString(accountNumber));
+        AccountCreateResponse accountCreateResponse = accountMapper.domainToCreateResponse(account);
+        return ResponseEntity.ok(accountCreateResponse);
+    }
+
 }

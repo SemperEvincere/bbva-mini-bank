@@ -1,8 +1,10 @@
 package com.bbva.minibank.presentation.controllers;
 
+import com.bbva.minibank.application.usecases.account.IAccountFindUseCase;
 import com.bbva.minibank.application.usecases.client.IClientFindByUseCase;
 import com.bbva.minibank.application.usecases.transaction.ITransactionBalanceUseCase;
 import com.bbva.minibank.application.usecases.transaction.ITransactionCreateUseCase;
+import com.bbva.minibank.domain.models.Account;
 import com.bbva.minibank.domain.models.Client;
 import com.bbva.minibank.domain.models.Transaction;
 import com.bbva.minibank.domain.models.enums.TransactionTypeEnum;
@@ -21,11 +23,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/transactions")
@@ -36,6 +34,7 @@ public class TransactionController {
   private final IClientFindByUseCase clientFindByUseCase;
   private final ITransactionBalanceUseCase transactionBalanceUseCase;
   private final TransactionPresentationMapper transactionMapper;
+  private final IAccountFindUseCase accountFindUseCase;
 
   private static ResponseEntity<ErrorResponse> getErrorResponseResponseEntity(BindingResult bindingResult) {
     if (bindingResult.hasErrors() && bindingResult.hasFieldErrors()) {
@@ -82,5 +81,15 @@ public class TransactionController {
         return ResponseEntity.badRequest().body("Tipo de transacción no válido");
       }
     }
+  }
+
+  @GetMapping(value ="/{accountNumber}", produces = "application/json")
+    @ResponseBody
+  public ResponseEntity<?> getAllTransactions(@PathVariable String accountNumber) {
+    Optional<Account> account = Optional.ofNullable(accountFindUseCase.findByAccountNumber(UUID.fromString(accountNumber)));
+    if (account.isEmpty()) {
+      return ResponseEntity.badRequest().body("Cuenta no encontrada");
+    }
+    return ResponseEntity.ok(account.get().getTransactions());
   }
 }

@@ -55,6 +55,11 @@ public class AccountService implements IAccountCreateUseCase, IAccountFindUseCas
   }
 
   @Override
+  public List<Account> findAll() {
+    return accountRepository.findAll();
+  }
+
+  @Override
   public Account update(Account accountUpdate) {
     return accountRepository.save(accountUpdate);
   }

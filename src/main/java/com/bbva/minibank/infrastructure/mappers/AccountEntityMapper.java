@@ -28,7 +28,7 @@ public class AccountEntityMapper {
               .balance(accountEntity.getBalance())
               .currency(accountEntity.getCurrency())
               .clientHolder(accountEntity.getOwner().getId())
-              .clientSecondHolder(accountEntity.getCoHolders().get(0).getId())
+              .clientSecondHolder(accountEntity.getCoHolders().isEmpty()? null : accountEntity.getCoHolders().get(0).getId())
               .transactions(Optional.ofNullable(accountEntity.getTransactions()).orElse(Collections.emptyList()).stream().map(transactionMapper::toDomain).toList())
               .build();
 

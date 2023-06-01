@@ -13,4 +13,5 @@ public interface IAccountRepository {
   Account save(Account newAccount);
 
 
+  List<Account> findAll();
 }
