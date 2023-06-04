@@ -4,15 +4,16 @@ import com.bbva.minibank.domain.models.enums.CurrencyEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "accounts")
@@ -31,6 +32,9 @@ public class AccountEntity {
   @PositiveOrZero
   private BigDecimal balance;
 
+  @CreationTimestamp
+  private LocalDate creationDate;
+
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   private CurrencyEnum currency;
@@ -44,4 +48,8 @@ public class AccountEntity {
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<TransactionEntity> transactions;
 
+  public List<ClientEntity> getCoHolders() {
+    // Si la lista es nula, devolver una lista vacía en su lugar
+    return coHolders != null ? coHolders : new ArrayList<>();
+  }
 }

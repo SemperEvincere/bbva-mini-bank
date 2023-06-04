@@ -28,4 +28,8 @@ public class Client {
   public void addAccount(UUID newAccount) {
     this.accounts.add(newAccount);
   }
+
+    public String getFullName() {
+        return this.firstName + " " + this.lastName;
+    }
 }

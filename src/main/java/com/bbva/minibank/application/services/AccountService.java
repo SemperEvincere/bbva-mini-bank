@@ -8,9 +8,9 @@ import com.bbva.minibank.application.usecases.account.IAccountUpdateUseCase;
 import com.bbva.minibank.application.usecases.client.IClientUpdateUseCase;
 import com.bbva.minibank.domain.models.Account;
 import com.bbva.minibank.domain.models.Client;
-import com.bbva.minibank.domain.models.enums.ClientTypeEnum;
 import com.bbva.minibank.domain.models.enums.CurrencyEnum;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -31,12 +31,13 @@ public class AccountService implements IAccountCreateUseCase, IAccountFindUseCas
     Account.AccountBuilder accountBuilder = Account.builder()
             .accountNumber(UUID.randomUUID())
             .currency(currency)
+            .creationDate(LocalDate.now())
             .balance(BigDecimal.ZERO)
             .transactions(new ArrayList<>())
             .clientHolder(holder.getId());
 
     if (secondHolder != null) {
-        accountBuilder.clientSecondHolder(secondHolder.getId());
+        accountBuilder.listSecondsHolders(List.of(secondHolder.getId()));
     }
 
     Account account = accountBuilder.build();

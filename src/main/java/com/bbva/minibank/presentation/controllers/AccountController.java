@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.bbva.minibank.presentation.response.account.AccountDetailsResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +44,7 @@ public class AccountController {
       return ResponseEntity.badRequest().body("Client not found");
     }
     Optional<Client> secondHolder = Optional.empty();
-    if (accountCreateRequest.getSecondHolderId() != null) {
+    if (accountCreateRequest.getSecondHolderId() != null && !accountCreateRequest.getSecondHolderId().equals(accountCreateRequest.getHolderId())) {
       secondHolder = clientFindByUseCase.findById(accountCreateRequest.getSecondHolderId());
       if (secondHolder.isEmpty()) {
         return ResponseEntity.badRequest().body("Second holder not found");
@@ -97,7 +98,13 @@ public class AccountController {
 
     Account account = accountOptional.get();
 
-    secondHolder.ifPresent(value -> account.setClientSecondHolder(value.getId()));
+    secondHolder.ifPresent(value -> {
+      if (value.getAccounts().contains(account.getAccountNumber())) {
+        return;
+      }else {
+        value.getAccounts().add(account.getAccountNumber());
+      }
+    });
     secondHolder.ifPresent(value -> value.getAccounts().add(account.getAccountNumber()));
     Account accountUpdate = accountUpdateUseCase.update(account);
     clientUpdateUseCase.update(secondHolder.orElse(null));
@@ -115,10 +122,10 @@ public class AccountController {
     }
 
     @GetMapping(value = "/{accountNumber}", produces = "application/json")
-    public ResponseEntity<?> findByAccountNumber(@PathVariable("accountNumber") String accountNumber) {
+    public ResponseEntity<AccountDetailsResponse> findByAccountNumber(@PathVariable("accountNumber") String accountNumber) {
         Account account = accountFindByUseCase.findByAccountNumber(UUID.fromString(accountNumber));
-        AccountCreateResponse accountCreateResponse = accountMapper.domainToCreateResponse(account);
-        return ResponseEntity.ok(accountCreateResponse);
+        AccountDetailsResponse accountDetailsResponse = accountMapper.domainToDetailsResponse(account);
+        return ResponseEntity.ok(accountDetailsResponse);
     }
 
 }

@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"lastName\" : \"Ramirez\",\r\n    \"firstName\" : \"Saul\",\r\n    \"email\" : \"ramirez@gmail.com\",\r\n    \"phone\" : \"542262626262\",\r\n    \"address\" : \"address\"\r\n}",
+							"raw": "{\r\n    \"lastName\": \"DOS\",\r\n    \"firstName\": \"CLIENTE\",\r\n    \"email\": \"cliente.dos@gmail.com\",\r\n    \"phone\": \"478494658\",\r\n    \"address\": \"otra direccion\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -64,7 +64,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8888/client/eeb55a99-d245-4370-826d-d6e41f800e2e",
+							"raw": "http://localhost:8888/client/88fc55a3-10aa-40af-a14d-c568e0a67f42",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -72,7 +72,110 @@
 							"port": "8888",
 							"path": [
 								"client",
-								"eeb55a99-d245-4370-826d-d6e41f800e2e"
+								"88fc55a3-10aa-40af-a14d-c568e0a67f42"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Account",
+			"item": [
+				{
+					"name": "create Account",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"holderId\" : \"88fc55a3-10aa-40af-a14d-c568e0a67f42\",\r\n    \"currency\" : \"ARS\",\r\n    \"secondHolderId\" : \"7226ddbb-43a6-407a-b75e-65da121e0a93\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8888/account/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"account",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add Coholder",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"holderId\" : \"75494303-7e75-4528-9372-2ca11248bd22\",\r\n    \"accountId\" : \"c521e6c3-5dfa-43ec-867d-892f53e143d5\",    \r\n    \"currency\" : \"ARS\",\r\n    \"secondHolderId\" : \"8d636447-91c5-4e65-8b12-89b6fb48a5e7\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8888/account/coholder",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"account",
+								"coholder"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getOne account",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8888/account/99370614-2994-401c-b6d6-32419511c994",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"account",
+								"99370614-2994-401c-b6d6-32419511c994"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAll accounts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8888/account/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"account",
+								""
 							]
 						}
 					},
@@ -98,7 +201,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8888/transactions/deposit",
+							"raw": "http://localhost:8888/transactions/operation",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -106,7 +209,7 @@
 							"port": "8888",
 							"path": [
 								"transactions",
-								"deposit"
+								"operation"
 							]
 						}
 					},
@@ -119,7 +222,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"type\": \"DEPOSIT\",\r\n    \"idClient\" : \"eeb55a99-d245-4370-826d-d6e41f800e2e\",\r\n    \"idAccountOrigin\" : \"\",\r\n    \"idAccountDestination\" : \"36eb3c55-0ace-415a-8b0a-03b813360c65\",\r\n    \"amount\" : 75.00\r\n}",
+							"raw": "{\r\n    \"type\": \"DEPOSIT\",\r\n    \"idClient\" : \"ba6f7d4e-a367-43dc-bf60-51288be5a439\",\r\n    \"idAccountOrigin\" : \"2cc64e4c-28b6-429b-940f-7c2a82609aa6\",\r\n    \"idAccountDestination\" : \"\",\r\n    \"amount\" : 20000.00\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -148,7 +251,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"type\": \"WITHDRAW\",\r\n    \"idClient\" : \"eeb55a99-d245-4370-826d-d6e41f800e2e\",\r\n    \"idAccountOrigin\" : \"\",\r\n    \"idAccountDestination\" : \"36eb3c55-0ace-415a-8b0a-03b813360c65\",\r\n    \"amount\" : 75.00\r\n}",
+							"raw": "{\r\n    \"type\": \"WITHDRAW\",\r\n    \"idClient\" : \"8d636447-91c5-4e65-8b12-89b6fb48a5e7\",\r\n    \"idAccountOrigin\" : \"b3693118-a141-4129-9982-abe0a01187ca\",\r\n    \"idAccountDestination\" : \"\",\r\n    \"amount\" : 10000.00\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -177,7 +280,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"type\": \"TRANSFER\",\r\n    \"idClient\" : \"eeb55a99-d245-4370-826d-d6e41f800e2e\",\r\n    \"idAccountOrigin\" : \"36eb3c55-0ace-415a-8b0a-03b813360c65\",\r\n    \"idAccountDestination\" : \"d6d3098a-e6e0-4e27-a97c-7f5a6f8bc2a0\",\r\n    \"amount\" : 75.00\r\n}",
+							"raw": "{\r\n    \"type\": \"TRANSFER\",\r\n    \"idClient\" : \"8d636447-91c5-4e65-8b12-89b6fb48a5e7\",\r\n    \"idAccountOrigin\" : \"b3693118-a141-4129-9982-abe0a01187ca\",\r\n    \"idAccountDestination\" : \"99370614-2994-401c-b6d6-32419511c994\",\r\n    \"amount\" : 7500.00\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
