@@ -12,6 +12,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -31,11 +32,12 @@ public class ClientRepositoryImpl implements IClientRepository {
     @Override
     public Client saveClient(Client client) {
         ClientEntity clientEntity = clientEntityMapper.domainToEntity(client);
-        List<AccountEntity> accountEntities = client.getAccounts()
-                                                    .stream()
-                                                    .map(accountNumber -> accountEntityMapper.domainToEntity(
-                                                            accountFindUseCase.findByAccountNumber(accountNumber)))
-                                                    .toList();
+        List<AccountEntity> accountEntities =
+            client.getAccounts()
+                  .stream()
+                  .map(accountNumber -> accountEntityMapper.domainToEntity(
+                      accountFindUseCase.findByAccountNumber(accountNumber)))
+                  .toList();
         clientEntity.setAccounts(new HashSet<>(accountEntities));
 
         clientSpringRepository.save(clientEntity);
@@ -81,14 +83,15 @@ public class ClientRepositoryImpl implements IClientRepository {
             throw new IllegalArgumentException("Client can not be null");
         }
         ClientEntity clientEntity = clientEntityMapper.domainToEntity(client);
-        List<AccountEntity> accountEntities = client.getAccounts()
-                                                    .stream()
-                                                    .map(accountNumber -> accountEntityMapper.domainToEntity(
-                                                            accountFindUseCase.findByAccountNumber(accountNumber)))
-                                                    .toList();
+        List<AccountEntity> accountEntities =
+            client.getAccounts()
+                  .stream()
+                  .map(accountNumber -> accountEntityMapper.domainToEntity(
+                      accountFindUseCase.findByAccountNumber(accountNumber)))
+                  .toList();
 
         clientEntity.setAccounts(new HashSet<>(accountEntities));
-
+        clientEntity.setUpdatedAt(LocalDate.now());
         return clientEntityMapper.entityToDomain(clientSpringRepository.save(clientEntity));
     }
 

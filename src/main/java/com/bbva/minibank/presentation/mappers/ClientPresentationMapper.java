@@ -16,14 +16,17 @@ public class ClientPresentationMapper {
 
   public ClientResponse domainToResponse(Client client) {
     return ClientResponse
-            .builder()
-            .id(client.getId())
-            .firstName(client.getFirstName())
-            .lastName(client.getLastName())
-            .email(client.getEmail())
-            .phone(client.getPhone())
-            .address(client.getAddress())
-            .build();
+                   .builder()
+                   .id(client.getId())
+                   .createDate(client.getCreatedAt())
+                   .firstName(client.getFirstName())
+                   .lastName(client.getLastName())
+                   .email(client.getEmail())
+                   .phone(client.getPhone())
+                   .address(client.getAddress())
+                   .updatedAt(client.getUpdatedAt())
+                   
+                   .build();
   }
 
   public Client requestToDomain(ClientCreateRequest request) {
@@ -44,12 +47,14 @@ public class ClientPresentationMapper {
     return ClientAllDataResponse
             .builder()
             .id(client.getId())
+            .createDate(client.getCreatedAt())
             .firstName(client.getFirstName())
             .lastName(client.getLastName())
             .email(client.getEmail())
             .phone(client.getPhone())
             .address(client.getAddress())
             .accounts(accountResponse)
+            .updatedAt(client.getUpdatedAt())
             .build();
   }
 
