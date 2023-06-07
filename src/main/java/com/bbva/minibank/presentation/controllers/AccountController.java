@@ -115,8 +115,8 @@ public class AccountController {
   @GetMapping(value = "/", produces = "application/json")
     public ResponseEntity<?> findAll() {
         List<Account> accounts = accountFindByUseCase.findAll();
-        List<AccountCreateResponse> accountCreateResponses = accounts.stream()
-                .map(accountMapper::domainToCreateResponse)
+        List<AccountDetailsResponse> accountCreateResponses = accounts.stream()
+                .map(accountMapper::domainToDetailsResponse)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(accountCreateResponses);
     }

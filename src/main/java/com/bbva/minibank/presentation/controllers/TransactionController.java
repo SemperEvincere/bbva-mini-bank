@@ -55,11 +55,12 @@ public class TransactionController {
       return errorResponse;
     }
 
-    Optional<Client> clientSaved = clientFindByUseCase.findById(UUID.fromString(transactionCreateRequest.getIdClient()));
+    Optional<Client> clientSaved = clientFindByUseCase.findById(
+            UUID.fromString(transactionCreateRequest.getIdClient()));
     Transaction transaction = transactionCreateUseCase.createTransaction(transactionCreateRequest);
 
     if (clientSaved.isEmpty()) {
-      return ResponseEntity.badRequest().body("Cliente no encontrado");
+      return ResponseEntity.badRequest().body("Client not found");
     }
     switch (TransactionTypeEnum.valueOf(transactionCreateRequest.getType())) {
       case DEPOSIT -> {
@@ -86,7 +87,8 @@ public class TransactionController {
   @GetMapping(value ="/{accountNumber}", produces = "application/json")
     @ResponseBody
   public ResponseEntity<?> getAllTransactions(@PathVariable String accountNumber) {
-    Optional<Account> account = Optional.ofNullable(accountFindUseCase.findByAccountNumber(UUID.fromString(accountNumber)));
+    Optional<Account> account = Optional.ofNullable(
+            accountFindUseCase.findByAccountNumber(UUID.fromString(accountNumber)));
     if (account.isEmpty()) {
       return ResponseEntity.badRequest().body("Cuenta no encontrada");
     }

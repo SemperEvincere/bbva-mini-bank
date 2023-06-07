@@ -1,5 +1,6 @@
 package com.bbva.minibank.presentation.response.account;
 
+import com.bbva.minibank.domain.models.enums.ClientTypeEnum;
 import com.bbva.minibank.domain.models.enums.CurrencyEnum;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.math.BigDecimal;
@@ -15,6 +16,7 @@ import lombok.Setter;
 public class AccountResponse {
 
   private UUID id;
+  private UUID clientHolderId;
   private BigDecimal balance;
   private CurrencyEnum currency;
 

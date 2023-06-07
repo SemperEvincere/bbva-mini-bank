@@ -4,14 +4,17 @@ import com.bbva.minibank.application.usecases.account.IAccountFindUseCase;
 import com.bbva.minibank.application.usecases.client.IClientCreateUseCase;
 import com.bbva.minibank.application.usecases.client.IClientFindByUseCase;
 import com.bbva.minibank.application.usecases.client.IClientSaveUseCase;
+import com.bbva.minibank.application.usecases.client.IClientUpdateUseCase;
 import com.bbva.minibank.domain.models.Account;
 import com.bbva.minibank.domain.models.Client;
 import com.bbva.minibank.presentation.mappers.AccountPresentationMapper;
 import com.bbva.minibank.presentation.mappers.ClientPresentationMapper;
 import com.bbva.minibank.presentation.request.client.ClientCreateRequest;
+import com.bbva.minibank.presentation.response.account.AccountDetailsResponse;
 import com.bbva.minibank.presentation.response.account.AccountResponse;
 import com.bbva.minibank.presentation.response.client.ClientAllDataResponse;
 import com.bbva.minibank.presentation.response.client.ClientResponse;
+import com.bbva.minibank.presentation.response.client.ClientUpdateResponse;
 import com.bbva.minibank.presentation.response.errors.ErrorResponse;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -23,13 +26,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/client")
@@ -42,6 +39,7 @@ public class ClientController {
   private final ClientPresentationMapper clientMapper;
   private final AccountPresentationMapper accountMapper;
   private final IAccountFindUseCase accountFindUseCase;
+  private final IClientUpdateUseCase clientUpdateUseCase;
 
   private static ResponseEntity<ErrorResponse> getErrorResponseEntity(BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
@@ -80,11 +78,31 @@ public class ClientController {
     Optional<Client> clientOptional = clientFindByUseCase.findById(id);
 
     return clientOptional.map(client -> {
-      List<Account> accounts = client.getAccounts().stream().map(accountFindUseCase::findByAccountNumber).toList();
-      List<AccountResponse> accountsResponse = accountMapper.domainToResponseList(accounts);
-      return clientMapper.domainToAllDataResponse(client, accountsResponse);
+      List<Account> accounts = client.getAccounts()
+                                     .stream()
+                                     .map(accountFindUseCase::findByAccountNumber)
+                                     .toList();
+      List<AccountDetailsResponse> accountDetailsResponses = accountMapper.domainToDetailResponseList(accounts);
+      return clientMapper.domainToAllDataResponse(client, accountDetailsResponses);
     }).orElse(null);
   }
 
+  @PutMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
+  public ResponseEntity<?> update(@PathVariable("id") UUID id, @Valid @RequestBody ClientCreateRequest request,
+                                     BindingResult bindingResult) {
+    ResponseEntity<ErrorResponse> errorResponse = getErrorResponseEntity(bindingResult);
+    if (errorResponse != null) {
+      return ResponseEntity.badRequest().body(errorResponse);
+    }
+    Client client = clientFindByUseCase.findById(id).orElse(null);
+    if (client == null) {
+      return ResponseEntity.notFound().build();
+    }
+    Client clientUpdated = clientMapper.updateDomainFromRequest(client, request, id);
+    Client savedUpdatedClient = clientUpdateUseCase.update(clientUpdated);
+    ClientResponse response = clientMapper.domainToResponse(savedUpdatedClient);
+    return ResponseEntity.ok(response);
+
+  }
 
 }

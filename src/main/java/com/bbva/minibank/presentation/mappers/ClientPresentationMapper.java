@@ -2,6 +2,7 @@ package com.bbva.minibank.presentation.mappers;
 
 import com.bbva.minibank.domain.models.Client;
 import com.bbva.minibank.presentation.request.client.ClientCreateRequest;
+import com.bbva.minibank.presentation.response.account.AccountDetailsResponse;
 import com.bbva.minibank.presentation.response.account.AccountResponse;
 import com.bbva.minibank.presentation.response.client.ClientAllDataResponse;
 import com.bbva.minibank.presentation.response.client.ClientResponse;
@@ -38,7 +39,7 @@ public class ClientPresentationMapper {
   }
 
   public ClientAllDataResponse domainToAllDataResponse(Client client,
-      List<AccountResponse> accountResponse) {
+      List<AccountDetailsResponse> accountResponse) {
 
     return ClientAllDataResponse
             .builder()
@@ -50,5 +51,15 @@ public class ClientPresentationMapper {
             .address(client.getAddress())
             .accounts(accountResponse)
             .build();
+  }
+
+  public Client updateDomainFromRequest(Client client, ClientCreateRequest request, UUID id) {
+    client.setId(id);
+    client.setFirstName(request.getFirstName());
+    client.setLastName(request.getLastName());
+    client.setEmail(request.getEmail());
+    client.setPhone(request.getPhone());
+    client.setAddress(request.getAddress());
+    return client;
   }
 }

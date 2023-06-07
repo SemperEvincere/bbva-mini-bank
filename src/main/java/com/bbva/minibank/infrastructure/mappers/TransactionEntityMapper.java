@@ -24,7 +24,13 @@ public class TransactionEntityMapper {
     if (transaction == null) {
       return null;
     }
-    return TransactionEntity.builder().type(transaction.getType()).amount(transaction.getAmount()).accountNumberFrom(transaction.getAccountNumberFrom()).accountNumberTo(transaction.getAccountNumberTo()).timestamp(transaction.getCreatedAt())
+    TransactionEntity.TransactionEntityBuilder transactionEntityBuilder = TransactionEntity.builder();
+          transactionEntityBuilder.type(transaction.getType());
+          transactionEntityBuilder.amount(transaction.getAmount());
+          transactionEntityBuilder.accountNumberFrom(transaction.getAccountNumberFrom());
+          transactionEntityBuilder.accountNumberTo(transaction.getAccountNumberTo());
+          transactionEntityBuilder.timestamp(transaction.getCreatedAt());
+    return transactionEntityBuilder
 
         .build();
   }

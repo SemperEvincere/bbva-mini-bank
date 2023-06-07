@@ -14,6 +14,7 @@ import com.bbva.minibank.domain.models.enums.TransactionTypeEnum;
 import com.bbva.minibank.presentation.request.transaction.TransactionCreateRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -42,10 +43,26 @@ public class TransactionService implements ITransactionBalanceUseCase, ITransact
   @Override
   public Transaction deposit(Transaction transaction,
       Client client) {
+    if(transaction.getAccountNumberFrom() == null){
+      throw new IllegalArgumentException("AccountNumberFrom not must be null");
+    }
+    // verificar que el cliente existe
+    if (clientFindBy.findById(client.getId()).isEmpty()) {
+      throw new IllegalArgumentException("Client not found");
+    }
+    // buscar la cuenta del depositante
     UUID accountClient = clientFindBy.getAccountClient(transaction, client);
     Account accountSaved = accountFind.findByAccountNumber(accountClient);
-    accountSaved.setBalance(accountOperationsUseCase.add(accountSaved.getBalance(), transaction.getAmount()));
-
+    // verificar que el cliente sea holder o coholder de la cuenta
+    if (accountSaved.getClientHolder().equals(client.getId()) || Objects.requireNonNull(
+                                                                                accountSaved.getListSecondsHolders())
+                                                                        .contains(client.getId())) {
+        // realizar el deposito
+      accountSaved.setBalance(accountOperationsUseCase.add(accountSaved.getBalance(), transaction.getAmount()));
+    } else {
+      throw new IllegalArgumentException("Client not is holder or coholder of account");
+    }
+    // guardar la transaccion
     if (accountSaved.getTransactions() == null || accountSaved.getTransactions().isEmpty()) {
       accountSaved.setTransactions(new ArrayList<>());
     }

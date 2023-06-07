@@ -71,4 +71,13 @@ public class AccountPresentationMapper {
                                      .balance(account.getBalance())
                                      .build();
     }
+
+    public List<AccountDetailsResponse> domainToDetailResponseList(List<Account> accounts) {
+        Set<AccountDetailsResponse> accountDetailsResponses = new HashSet<>();
+        for (Account account : accounts) {
+            accountDetailsResponses.add(domainToDetailsResponse(account));
+        }
+        return accountDetailsResponses.stream()
+                                      .toList();
+    }
 }

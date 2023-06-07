@@ -25,4 +25,6 @@ public interface IClientRepository {
   Client update(Client client);
 
   void addAccount(Client client, Account account);
+
+  boolean existsById(UUID email);
 }
