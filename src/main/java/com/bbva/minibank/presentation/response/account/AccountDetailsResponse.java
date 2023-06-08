@@ -24,4 +24,5 @@ public class AccountDetailsResponse {
     private Map<UUID, String> mapSecondsHolderId;
     private CurrencyEnum currency;
     private BigDecimal balance;
+    private boolean isLocked;
 }

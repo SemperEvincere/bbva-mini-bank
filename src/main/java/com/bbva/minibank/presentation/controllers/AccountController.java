@@ -1,6 +1,7 @@
 package com.bbva.minibank.presentation.controllers;
 
 import com.bbva.minibank.application.usecases.account.IAccountCreateUseCase;
+import com.bbva.minibank.application.usecases.account.IAccountDeleteUseCase;
 import com.bbva.minibank.application.usecases.account.IAccountFindUseCase;
 import com.bbva.minibank.application.usecases.account.IAccountUpdateUseCase;
 import com.bbva.minibank.application.usecases.client.IClientFindByUseCase;
@@ -33,6 +34,7 @@ public class AccountController {
   private final IClientUpdateUseCase clientUpdateUseCase;
   private final IAccountFindUseCase accountFindByUseCase;
   private final IAccountUpdateUseCase accountUpdateUseCase;
+  private final IAccountDeleteUseCase accountDeleteUseCase;
 
   @PostMapping(value = "/create", consumes = "application/json", produces = "application/json")
   public ResponseEntity<?> create(@RequestBody AccountCreateRequest accountCreateRequest) {
@@ -92,8 +94,8 @@ public class AccountController {
             .filter(account -> account.getCurrency().equals(accountAddCoholder.getCurrency()))
             .findFirst();
 
-    if (accountOptional.isEmpty()) {
-      return ResponseEntity.badRequest().body("Account not found");
+    if (accountOptional.isEmpty() || accountOptional.get().isLocked()) {
+      return ResponseEntity.badRequest().body("Account not found or blocked");
     }
 
     Account account = accountOptional.get();
@@ -126,6 +128,13 @@ public class AccountController {
         Account account = accountFindByUseCase.findByAccountNumber(UUID.fromString(accountNumber));
         AccountDetailsResponse accountDetailsResponse = accountMapper.domainToDetailsResponse(account);
         return ResponseEntity.ok(accountDetailsResponse);
+    }
+
+    @DeleteMapping(value = "/{accountNumber}", produces = "application/json")
+    public ResponseEntity<?> deleteByAccountNumber(@PathVariable("accountNumber") String accountNumber) {
+        Account account = accountFindByUseCase.findByAccountNumber(UUID.fromString(accountNumber));
+        accountDeleteUseCase.blockAccount(account);
+        return ResponseEntity.ok().build();
     }
 
 }

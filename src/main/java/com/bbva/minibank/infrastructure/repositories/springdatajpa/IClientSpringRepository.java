@@ -17,6 +17,6 @@ public interface IClientSpringRepository extends JpaRepository<ClientEntity, UUI
       String lastName,
       String firstName);
 	
-	@Query("SELECT c FROM ClientEntity c WHERE c.id = :id AND c.isActive = :isActive")
+//	@Query("SELECT c FROM ClientEntity c WHERE c.id = :id AND c.isActive = :isActive")
 	Optional<ClientEntity> findByIdAndIsActive(UUID id, boolean isActive);
 }

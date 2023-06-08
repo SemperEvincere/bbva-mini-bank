@@ -40,7 +40,8 @@ public class Account {
   private LocalDate creationDate;
 
   private List<Transaction> transactions;
-
+  @NotNull
+  private boolean isLocked;
 
 
 }

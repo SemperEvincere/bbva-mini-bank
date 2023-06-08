@@ -1,10 +1,7 @@
 package com.bbva.minibank.application.services;
 
 import com.bbva.minibank.application.repository.IAccountRepository;
-import com.bbva.minibank.application.usecases.account.IAccountCreateUseCase;
-import com.bbva.minibank.application.usecases.account.IAccountFindUseCase;
-import com.bbva.minibank.application.usecases.account.IAccountOperationsUseCase;
-import com.bbva.minibank.application.usecases.account.IAccountUpdateUseCase;
+import com.bbva.minibank.application.usecases.account.*;
 import com.bbva.minibank.application.usecases.client.IClientUpdateUseCase;
 import com.bbva.minibank.domain.models.Account;
 import com.bbva.minibank.domain.models.Client;
@@ -19,7 +16,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AccountService implements IAccountCreateUseCase, IAccountFindUseCase, IAccountUpdateUseCase, IAccountOperationsUseCase {
+public class AccountService implements
+        IAccountCreateUseCase,
+        IAccountFindUseCase,
+        IAccountUpdateUseCase,
+        IAccountOperationsUseCase,
+        IAccountDeleteUseCase {
 
   private final IAccountRepository accountRepository;
   private final IClientUpdateUseCase clientUpdateUseCase;
@@ -76,5 +78,11 @@ public class AccountService implements IAccountCreateUseCase, IAccountFindUseCas
   public BigDecimal add(BigDecimal balance,
       BigDecimal amount) {
     return balance.add(amount);
+  }
+
+  @Override
+  public void blockAccount(Account account) {
+    account.setLocked(true);
+    accountRepository.save(account);
   }
 }

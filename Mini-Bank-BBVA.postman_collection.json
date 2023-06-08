@@ -64,7 +64,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8888/client/88fc55a3-10aa-40af-a14d-c568e0a67f42",
+							"raw": "http://localhost:8888/client/33fc7c24-ecd2-4e42-ad16-f4f6ab5aa06e",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -72,9 +72,66 @@
 							"port": "8888",
 							"path": [
 								"client",
-								"88fc55a3-10aa-40af-a14d-c568e0a67f42"
+								"33fc7c24-ecd2-4e42-ad16-f4f6ab5aa06e"
 							]
 						}
+					},
+					"response": []
+				},
+				{
+					"name": "update Client",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"CLIENTE\",\r\n    \"lastName\": \"UNO\",\r\n    \"email\": \"cliente.uno@gmail.com\",\r\n    \"phone\": \"478494658\",\r\n    \"address\": \"otra direccion\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8888/client/883ccd1a-7076-4b85-86f0-790e1a9ebf4c",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"client",
+								"883ccd1a-7076-4b85-86f0-790e1a9ebf4c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "softDelete Client",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8888/client/6c72cb9d-f496-432e-8518-611fd8d3154b",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"client",
+								"6c72cb9d-f496-432e-8518-611fd8d3154b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": []
 					},
 					"response": []
 				}
@@ -90,7 +147,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"holderId\" : \"88fc55a3-10aa-40af-a14d-c568e0a67f42\",\r\n    \"currency\" : \"ARS\",\r\n    \"secondHolderId\" : \"7226ddbb-43a6-407a-b75e-65da121e0a93\"\r\n}",
+							"raw": "{\r\n    \"holderId\" : \"9d3463da-d2fc-4bfc-86a8-c4e577f7642d\",\r\n    \"currency\" : \"ARS\",\r\n    \"secondHolderId\" : \"c67bb5b6-3b05-45dd-a5a2-68f875a81b1e\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -119,7 +176,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"holderId\" : \"75494303-7e75-4528-9372-2ca11248bd22\",\r\n    \"accountId\" : \"c521e6c3-5dfa-43ec-867d-892f53e143d5\",    \r\n    \"currency\" : \"ARS\",\r\n    \"secondHolderId\" : \"8d636447-91c5-4e65-8b12-89b6fb48a5e7\"\r\n}",
+							"raw": "{\r\n    \"holderId\" : \"883ccd1a-7076-4b85-86f0-790e1a9ebf4c\",\r\n    \"accountId\" : \"15c67f5a-b352-4e22-8343-e70a8f11f677\",    \r\n    \"currency\" : \"USD\",\r\n    \"secondHolderId\" : \"9d3463da-d2fc-4bfc-86a8-c4e577f7642d\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -147,7 +204,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8888/account/99370614-2994-401c-b6d6-32419511c994",
+							"raw": "http://localhost:8888/account/15c67f5a-b352-4e22-8343-e70a8f11f677",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -155,7 +212,7 @@
 							"port": "8888",
 							"path": [
 								"account",
-								"99370614-2994-401c-b6d6-32419511c994"
+								"15c67f5a-b352-4e22-8343-e70a8f11f677"
 							]
 						}
 					},
@@ -222,7 +279,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"type\": \"DEPOSIT\",\r\n    \"idClient\" : \"ba6f7d4e-a367-43dc-bf60-51288be5a439\",\r\n    \"idAccountOrigin\" : \"2cc64e4c-28b6-429b-940f-7c2a82609aa6\",\r\n    \"idAccountDestination\" : \"\",\r\n    \"amount\" : 20000.00\r\n}",
+							"raw": "{\r\n    \"type\": \"DEPOSIT\",\r\n    \"idClient\" : \"852acfc4-a34f-458e-981b-6c343b653bc4\",\r\n    \"idAccountOrigin\" : \"d86820f7-3991-4e51-9f34-1094cf986cc3\",\r\n    \"idAccountDestination\" : \"\",\r\n    \"amount\" : 30000.00\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

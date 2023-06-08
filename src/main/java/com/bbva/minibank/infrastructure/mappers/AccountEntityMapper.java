@@ -23,23 +23,24 @@ public class AccountEntityMapper {
       }
 
       // Construye una instancia de Account utilizando el patrón Builder
-    return Account.builder()
-                  .accountNumber(accountEntity.getAccountNumber())
-                  .balance(accountEntity.getBalance())
-                  .currency(accountEntity.getCurrency())
-                  .creationDate(accountEntity.getCreationDate())
-                  .clientHolder(accountEntity.getOwner()
-                                             .getId())
-                  .listSecondsHolders(accountEntity.getCoHolders().stream()
-                                                   .map(ClientEntity::getId)
-                                                   .collect(Collectors.toList()))
+      return Account.builder()
+              .accountNumber(accountEntity.getAccountNumber())
+              .balance(accountEntity.getBalance())
+              .currency(accountEntity.getCurrency())
+              .creationDate(accountEntity.getCreationDate())
+              .clientHolder(accountEntity.getOwner()
+                      .getId())
+              .listSecondsHolders(accountEntity.getCoHolders().stream()
+                      .map(ClientEntity::getId)
+                      .collect(Collectors.toList()))
 
-                  .transactions(Optional.ofNullable(accountEntity.getTransactions())
-                                        .orElse(Collections.emptyList())
-                                        .stream()
-                                        .map(transactionMapper::toDomain)
-                                        .toList())
-                  .build();
+              .transactions(Optional.ofNullable(accountEntity.getTransactions())
+                      .orElse(Collections.emptyList())
+                      .stream()
+                      .map(transactionMapper::toDomain)
+                      .toList())
+              .isLocked(accountEntity.isLocked())
+              .build();
 
   }
 
@@ -48,38 +49,39 @@ public class AccountEntityMapper {
       return null;
     }
 
-    AccountEntity.AccountEntityBuilder accountBuilder = AccountEntity.builder()
-            .accountNumber(account.getAccountNumber())
-            .balance(account.getBalance())
-            .currency(account.getCurrency())
-            .creationDate(account.getCreationDate());
+      AccountEntity.AccountEntityBuilder accountBuilder = AccountEntity.builder()
+              .accountNumber(account.getAccountNumber())
+              .balance(account.getBalance())
+              .currency(account.getCurrency())
+              .creationDate(account.getCreationDate())
+              .isLocked(account.isLocked());
 
-    // Asignar el titular (holder)
-    ClientEntity holderEntity = new ClientEntity();
-    holderEntity.setId(account.getClientHolder());
-    accountBuilder.owner(holderEntity);
+      // Asignar el titular (holder)
+      ClientEntity holderEntity = new ClientEntity();
+      holderEntity.setId(account.getClientHolder());
+      accountBuilder.owner(holderEntity);
 
-    // Asignar el segundo titular (secondHolder)
-    if (account.getListSecondsHolders() != null) {
-      List<ClientEntity> coHolders = account.getListSecondsHolders().stream()
-                                            .map(clientId -> {
-                                              ClientEntity coHolderEntity = new ClientEntity();
-                                              coHolderEntity.setId(clientId);
-                                              return coHolderEntity;
-                                            })
-                                            .collect(Collectors.toList());
-      accountBuilder.coHolders(coHolders);
-    }
+      // Asignar el segundo titular (secondHolder)
+      if (account.getListSecondsHolders() != null) {
+          List<ClientEntity> coHolders = account.getListSecondsHolders().stream()
+                  .map(clientId -> {
+                      ClientEntity coHolderEntity = new ClientEntity();
+                      coHolderEntity.setId(clientId);
+                      return coHolderEntity;
+                  })
+                  .collect(Collectors.toList());
+          accountBuilder.coHolders(coHolders);
+      }
 
-    // Asignar las transacciones
-    List<TransactionEntity> transactionEntities = Optional.ofNullable(account.getTransactions())
-            .orElse(Collections.emptyList())
-            .stream()
-            .map(transactionMapper::toEntity)
-            .toList();
+      // Asignar las transacciones
+      List<TransactionEntity> transactionEntities = Optional.ofNullable(account.getTransactions())
+              .orElse(Collections.emptyList())
+              .stream()
+              .map(transactionMapper::toEntity)
+              .toList();
 
-    accountBuilder.transactions(transactionEntities);
+      accountBuilder.transactions(transactionEntities);
 
-    return accountBuilder.build();
+      return accountBuilder.build();
   }
 }

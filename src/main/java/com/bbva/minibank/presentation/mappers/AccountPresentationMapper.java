@@ -62,14 +62,15 @@ public class AccountPresentationMapper {
         }
 
         return AccountDetailsResponse.builder()
-                                     .accountNumber(account.getAccountNumber())
-                                     .creationDate(account.getCreationDate())
-                                     .holderId(holderId)
-                                     .holderName(holderName)
-                                     .mapSecondsHolderId(secondsHolderMap)
-                                     .currency(account.getCurrency())
-                                     .balance(account.getBalance())
-                                     .build();
+                .accountNumber(account.getAccountNumber())
+                .creationDate(account.getCreationDate())
+                .holderId(holderId)
+                .holderName(holderName)
+                .mapSecondsHolderId(secondsHolderMap)
+                .currency(account.getCurrency())
+                .balance(account.getBalance())
+                .isLocked(account.isLocked())
+                .build();
     }
 
     public List<AccountDetailsResponse> domainToDetailResponseList(List<Account> accounts) {
