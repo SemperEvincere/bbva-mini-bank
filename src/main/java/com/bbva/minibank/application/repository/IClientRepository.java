@@ -27,4 +27,10 @@ public interface IClientRepository {
   void addAccount(Client client, Account account);
 
   boolean existsById(UUID email);
+  
+  void delete(Client client);
+  
+  Client restoreDeletedClient(Client client);
+  
+  Optional<Client> findByIdAndIsActive(UUID id);
 }

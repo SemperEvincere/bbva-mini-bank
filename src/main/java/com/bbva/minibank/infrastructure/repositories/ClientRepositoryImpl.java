@@ -50,6 +50,7 @@ public class ClientRepositoryImpl implements IClientRepository {
         return clientSpringRepository
                 .findAll()
                 .stream()
+                .filter(ClientEntity::getIsActive)
                 .map(clientEntityMapper::entityToDomain)
                 .collect(Collectors.toList());
     }
@@ -107,5 +108,25 @@ public class ClientRepositoryImpl implements IClientRepository {
     @Override
     public boolean existsById(UUID id) {
         return clientSpringRepository.existsById(id);
+    }
+    
+    @Override
+    public void delete(Client client) {
+        ClientEntity clientEntity = clientEntityMapper.domainToEntity(client);
+        clientEntity.setIsActive(false);
+        clientSpringRepository.save(clientEntity);
+    }
+    
+    @Override
+    public Client restoreDeletedClient(Client client) {
+        ClientEntity clientEntity = clientEntityMapper.domainToEntity(client);
+        clientEntity.setIsActive(true);
+        return clientEntityMapper.entityToDomain(clientSpringRepository.save(clientEntity));
+    }
+    
+    @Override
+    public Optional<Client> findByIdAndIsActive(UUID id) {
+        return clientSpringRepository.findByIdAndIsActive(id, true)
+                                     .map(clientEntityMapper::entityToDomain);
     }
 }

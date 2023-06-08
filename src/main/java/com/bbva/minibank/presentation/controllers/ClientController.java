@@ -1,10 +1,7 @@
 package com.bbva.minibank.presentation.controllers;
 
 import com.bbva.minibank.application.usecases.account.IAccountFindUseCase;
-import com.bbva.minibank.application.usecases.client.IClientCreateUseCase;
-import com.bbva.minibank.application.usecases.client.IClientFindByUseCase;
-import com.bbva.minibank.application.usecases.client.IClientSaveUseCase;
-import com.bbva.minibank.application.usecases.client.IClientUpdateUseCase;
+import com.bbva.minibank.application.usecases.client.*;
 import com.bbva.minibank.domain.models.Account;
 import com.bbva.minibank.domain.models.Client;
 import com.bbva.minibank.presentation.mappers.AccountPresentationMapper;
@@ -40,6 +37,7 @@ public class ClientController {
   private final AccountPresentationMapper accountMapper;
   private final IAccountFindUseCase accountFindUseCase;
   private final IClientUpdateUseCase clientUpdateUseCase;
+  private final IClientDeleteUseCase clientDeleteUseCase;
 
   private static ResponseEntity<ErrorResponse> getErrorResponseEntity(BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
@@ -75,7 +73,7 @@ public class ClientController {
   @GetMapping(value = "/{id}", produces = "application/json")
   @ResponseBody
   public ClientAllDataResponse getOne(@PathVariable("id") UUID id) {
-    Optional<Client> clientOptional = clientFindByUseCase.findById(id);
+    Optional<Client> clientOptional = clientFindByUseCase.findByIdAndIsActive(id);
 
     return clientOptional.map(client -> {
       List<Account> accounts = client.getAccounts()
@@ -103,6 +101,27 @@ public class ClientController {
     ClientResponse response = clientMapper.domainToResponse(savedUpdatedClient);
     return ResponseEntity.ok(response);
 
+  }
+  
+  @DeleteMapping(value = "/{id}", produces = "application/json")
+  public ResponseEntity<?> delete(@PathVariable("id") UUID id) {
+    Client client = clientFindByUseCase.findByIdAndIsActive(id).orElse(null);
+    if (client == null) {
+      return ResponseEntity.notFound().build();
+    }
+    clientDeleteUseCase.delete(client);
+    return ResponseEntity.ok("Client delete");
+  }
+  
+  @PostMapping(value = "/restore/{id}", produces = "application/json")
+  public ResponseEntity<?> restoreDeletedClient(@PathVariable("id") UUID id) {
+    Client client = clientFindByUseCase.findById(id).orElse(null);
+    if (client == null) {
+      return ResponseEntity.notFound().build();
+    }
+    Client clienteRestored = clientUpdateUseCase.restoreDeletedClient(client);
+    ClientResponse response = clientMapper.domainToResponse(clienteRestored);
+    return ResponseEntity.ok(response);
   }
 
 

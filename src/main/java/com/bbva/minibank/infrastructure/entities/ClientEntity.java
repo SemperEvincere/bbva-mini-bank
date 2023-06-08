@@ -59,5 +59,7 @@ public class ClientEntity {
   
   @UpdateTimestamp
   private LocalDate updatedAt;
+  
+  private Boolean isActive;
 
 }

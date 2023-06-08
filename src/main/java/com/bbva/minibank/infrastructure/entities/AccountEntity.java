@@ -47,6 +47,8 @@ public class AccountEntity {
 
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<TransactionEntity> transactions;
+  
+  private boolean isLocked;
 
   public List<ClientEntity> getCoHolders() {
     // Si la lista es nula, devolver una lista vacía en su lugar

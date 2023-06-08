@@ -34,6 +34,7 @@ public class ClientEntityMapper {
                                .map(accountFindUseCase::findByAccountNumber)
                                .map(accountEntityMapper::domainToEntity)
                                .collect(Collectors.toSet()))
+               .isActive(true)
                .build();
   }
 

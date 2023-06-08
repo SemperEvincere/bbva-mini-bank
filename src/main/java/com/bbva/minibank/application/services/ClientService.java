@@ -1,10 +1,7 @@
 package com.bbva.minibank.application.services;
 
 import com.bbva.minibank.application.repository.IClientRepository;
-import com.bbva.minibank.application.usecases.client.IClientCreateUseCase;
-import com.bbva.minibank.application.usecases.client.IClientFindByUseCase;
-import com.bbva.minibank.application.usecases.client.IClientSaveUseCase;
-import com.bbva.minibank.application.usecases.client.IClientUpdateUseCase;
+import com.bbva.minibank.application.usecases.client.*;
 import com.bbva.minibank.domain.models.Account;
 import com.bbva.minibank.domain.models.Client;
 import com.bbva.minibank.domain.models.Transaction;
@@ -20,7 +17,11 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class ClientService
-        implements IClientUpdateUseCase, IClientCreateUseCase, IClientSaveUseCase, IClientFindByUseCase {
+    implements IClientUpdateUseCase,
+               IClientCreateUseCase,
+               IClientSaveUseCase,
+               IClientFindByUseCase,
+               IClientDeleteUseCase {
 
     private final IClientRepository clientRepository;
     private final ClientPresentationMapper clientMapper;
@@ -60,7 +61,12 @@ public class ClientService
                      .findFirst()
                      .orElseThrow(() -> new RuntimeException("Account not found"));
     }
-
+    
+    @Override
+    public Optional<Client> findByIdAndIsActive(UUID id) {
+        return clientRepository.findByIdAndIsActive(id);
+    }
+    
     @Override
     public Client update(Client client) {
         if (!clientRepository.existsById(client.getId())) {
@@ -72,5 +78,15 @@ public class ClientService
     @Override
     public void addAccount(Client client, Account account) {
         clientRepository.addAccount(client, account);
+    }
+    
+    @Override
+    public Client restoreDeletedClient(Client client) {
+        return clientRepository.restoreDeletedClient(client);
+    }
+    
+    @Override
+    public void delete(Client client) {
+        clientRepository.delete(client);
     }
 }

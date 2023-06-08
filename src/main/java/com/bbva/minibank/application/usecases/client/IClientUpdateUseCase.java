@@ -10,4 +10,6 @@ public interface IClientUpdateUseCase {
   Client update(Client client);
 
   void addAccount(Client client, Account account);
+  
+  Client restoreDeletedClient(Client client);
 }

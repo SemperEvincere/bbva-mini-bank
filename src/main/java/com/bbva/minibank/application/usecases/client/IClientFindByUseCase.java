@@ -14,4 +14,6 @@ public interface IClientFindByUseCase {
 
   UUID getAccountClient(Transaction transaction,
       Client client);
+  
+  Optional<Client> findByIdAndIsActive(UUID id);
 }
