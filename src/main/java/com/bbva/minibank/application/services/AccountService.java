@@ -71,6 +71,9 @@ public class AccountService implements
   @Override
   public BigDecimal substract(BigDecimal balance,
       BigDecimal amount) {
+    if(balance.compareTo(amount) < 0){
+      throw new IllegalArgumentException("Balance not must be negative");
+    }
     return balance.subtract(amount);
   }
 

@@ -7,6 +7,7 @@ import com.bbva.minibank.application.usecases.account.IAccountUpdateUseCase;
 import com.bbva.minibank.application.usecases.client.IClientFindByUseCase;
 import com.bbva.minibank.application.usecases.transaction.ITransactionBalanceUseCase;
 import com.bbva.minibank.application.usecases.transaction.ITransactionCreateUseCase;
+import com.bbva.minibank.application.usecases.transaction.ITransactionFindUseCase;
 import com.bbva.minibank.domain.models.Account;
 import com.bbva.minibank.domain.models.Client;
 import com.bbva.minibank.domain.models.Transaction;
@@ -14,6 +15,7 @@ import com.bbva.minibank.domain.models.enums.TransactionTypeEnum;
 import com.bbva.minibank.presentation.request.transaction.TransactionCreateRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +23,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class TransactionService implements ITransactionBalanceUseCase, ITransactionCreateUseCase {
+public class TransactionService implements ITransactionBalanceUseCase, ITransactionCreateUseCase,
+                                           ITransactionFindUseCase {
 
   private final ITransactionRepository transactionRepository;
   private final IAccountFindUseCase accountFind;
@@ -91,9 +94,26 @@ public class TransactionService implements ITransactionBalanceUseCase, ITransact
   @Override
   public Transaction transfer(Transaction transaction,
       Client clientSaved) {
+    if(transaction.getAccountNumberTo().equals(transaction.getAccountNumberFrom())){
+      throw new IllegalArgumentException("Account origin and destination must be different");
+    }
+    
     UUID accountClient = clientFindBy.getAccountClient(transaction, clientSaved);
     Account accountOrigin = accountFind.findByAccountNumber(accountClient);
     Account accountDestination = accountFind.findByAccountNumber(transaction.getAccountNumberTo());
+
+    if(accountOrigin.getBalance().compareTo(transaction.getAmount()) < 0){
+      throw new IllegalArgumentException("Insufficient funds");
+    }
+    
+    if(accountOrigin.getClientHolder().equals(clientSaved.getId()) || Objects.requireNonNull(accountOrigin.getListSecondsHolders()).contains(clientSaved.getId())){
+      throw new IllegalArgumentException("Client not is holder or coholder of account origin");
+    }
+    
+    if(!accountOrigin.getCurrency().equals(accountDestination.getCurrency())){
+      throw new IllegalArgumentException("Accounts must be in the same currency");
+    }
+    
     accountOrigin.setBalance(accountOperationsUseCase.substract(accountOrigin.getBalance(), transaction.getAmount()));
     accountDestination.setBalance(accountOperationsUseCase.add(accountDestination.getBalance(), transaction.getAmount()));
     if (accountOrigin.getTransactions() == null || accountOrigin.getTransactions().isEmpty()) {
@@ -110,6 +130,16 @@ public class TransactionService implements ITransactionBalanceUseCase, ITransact
 
     return transactionSaved;
   }
-
-
+  
+  
+  @Override
+  public List<Transaction> findAll() {
+    return transactionRepository.findAll();
+  }
+  
+  @Override
+  public Transaction findById(UUID transactionNumber) {
+    return transactionRepository.findById(transactionNumber).orElseThrow(() -> new IllegalArgumentException("Transaction not found"));
+  }
+  
 }
